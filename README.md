@@ -1,2 +1,2 @@
 # CDA_DomoArigato
-Projet de demotique
+Projet de domotique
