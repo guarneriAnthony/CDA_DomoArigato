@@ -1,9 +1,9 @@
 package com.lacorp.backend.repository;
 
-import com.lacorp.backend.model.User;
+import com.lacorp.backend.model.UserRepositoryModel;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, Integer> {
-    User findByUsername (String username);
-    User findByEmail (String email);
+public interface UserRepository extends CrudRepository<UserRepositoryModel, Integer> {
+    UserRepositoryModel findByUsername (String username);
+    UserRepositoryModel findByEmail (String email);
 }

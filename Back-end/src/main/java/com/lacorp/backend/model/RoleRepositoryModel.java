@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Entity
 @Data
 @Table(name = "role")
-public class Role implements GrantedAuthority {
+public class RoleRepositoryModel implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

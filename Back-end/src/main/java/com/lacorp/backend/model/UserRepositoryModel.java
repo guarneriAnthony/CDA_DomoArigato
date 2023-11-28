@@ -1,6 +1,7 @@
 package com.lacorp.backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,8 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "user")
-public class User implements UserDetails {
+@AllArgsConstructor
+public class UserRepositoryModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,7 +27,14 @@ public class User implements UserDetails {
     private String username;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private List<RoleRepositoryModel> roleRepositoryModels;
+
+    public UserRepositoryModel(String username, String password, String email, List<RoleRepositoryModel> roleRepositoryModels) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.roleRepositoryModels = roleRepositoryModels;
+    }
 
     // À MODIFIER après création de House et BrandAccount
     // @OneToMany
@@ -37,7 +46,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return roleRepositoryModels;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.lacorp.backend.service.impl;
 
 import com.lacorp.backend.execption.AccountExistsException;
-import com.lacorp.backend.model.User;
+import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.repository.RoleRepository;
 import com.lacorp.backend.repository.UserRepository;
 import com.lacorp.backend.service.JwtUserService;
@@ -48,13 +48,9 @@ public class JwtUserServiceImpl implements JwtUserService {
         if (existingUser != null){
             throw new AccountExistsException();
         }
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setEmail(email);
-        user.setRoles(List.of(roleRepository.getRoleByName("1")));
-        userRepository.save(user);
-        return user;
+        UserRepositoryModel userRepositoryModel = new UserRepositoryModel(username, passwordEncoder.encode(password), email,List.of(roleRepository.getRoleByName("1")));
+        userRepository.save(userRepositoryModel);
+        return userRepositoryModel;
     }
     @Override
     public Authentication authenticate(String username, String password) throws Exception {
@@ -68,12 +64,11 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(login);
-        if (user == null) {
+        UserRepositoryModel userRepositoryModel = userRepository.findByUsername(login);
+        if (userRepositoryModel == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return user;
+        return userRepositoryModel;
     }
     @Override
     public UserDetails getUserFromJwt(String jwt) {
