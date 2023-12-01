@@ -27,6 +27,7 @@ public class SecurityController {
         String token = userService.generateJwtForUser(user);
         return ResponseEntity.ok(new UserOutputDTO(user, token));
     }
+
     @PostMapping("/authorize")
     public ResponseEntity<UserOutputDTO> authorize(@RequestBody UserInputDTO userInputDTO) throws UnauthorizedException {
         Authentication authentication = null;

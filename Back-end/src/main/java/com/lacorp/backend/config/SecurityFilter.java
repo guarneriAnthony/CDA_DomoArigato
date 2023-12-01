@@ -26,7 +26,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             UserDetails user = jwtUserService.getUserFromJwt(incomingJwt);
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.info("try to  parse the token , but. . . .");
         }
         filterChain.doFilter(request, response);

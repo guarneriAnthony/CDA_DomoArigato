@@ -15,12 +15,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilter securityFilter() {return new SecurityFilter();}
+    public SecurityFilter securityFilter() {
+        return new SecurityFilter();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         // return new BCryptPasswordEncoder()
         return NoOpPasswordEncoder.getInstance();
     }
+
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -28,7 +32,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(securityFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                                .anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

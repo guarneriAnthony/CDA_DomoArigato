@@ -1,7 +1,6 @@
 package com.lacorp.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,20 +29,16 @@ public class UserRepositoryModel implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<RoleRepositoryModel> roleRepositoryModels;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hue_id", referencedColumnName = "id")
+    private HueRepositoryModel hueAccount;
+
     public UserRepositoryModel(String username, String password, String email, List<RoleRepositoryModel> roleRepositoryModels) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.roleRepositoryModels = roleRepositoryModels;
     }
-
-    // À MODIFIER après création de House et BrandAccount
-    // @OneToMany
-    // @JoinColumn(name = "user_id")
-    // private List<BrandAccount> brandAccounts;
-    // @OneToMany
-    // @JoinColumn(name = "user_id")
-    // private List<House> houses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
