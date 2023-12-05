@@ -20,13 +20,16 @@ public class HueController {
         return hueService.generateLink(authentication);
     }
 
+
     @GetMapping("oauth/callback")
     private void callback(@RequestParam("code") String code,@RequestParam("state") String state) throws IOException {
         hueService.saveAccount(code, state);
     }
 
-    @PutMapping("/delete_account")
+    @PutMapping("delete_account")
     public void delete(){
         hueService.delete(new HueRepositoryModel());
     }
+    
+
 }

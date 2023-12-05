@@ -2,24 +2,25 @@ package com.lacorp.backend.controller;
 
 import com.lacorp.backend.execption.AccountExistsException;
 import com.lacorp.backend.execption.UnauthorizedException;
+import com.lacorp.backend.model.HueRepositoryModel;
 import com.lacorp.backend.model.UserInputDTO;
 import com.lacorp.backend.model.UserOutputDTO;
+import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.service.JwtUserService;
+import com.lacorp.backend.service.impl.JwtUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SecurityController {
 
     @Autowired
-    private JwtUserService userService;
+    private JwtUserServiceImpl userService;
 
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO dto) throws AccountExistsException {

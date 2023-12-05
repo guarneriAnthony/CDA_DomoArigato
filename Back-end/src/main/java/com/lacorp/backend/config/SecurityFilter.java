@@ -22,13 +22,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String header = request.getHeader("Authorization");
-            String incomingJwt = header.substring(7);
-            UserDetails user = jwtUserService.getUserFromJwt(incomingJwt);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            if (header != null && header.startsWith("Bearer ")) {
+                String incomingJwt = header.substring(7);
+                UserDetails user = jwtUserService.getUserFromJwt(incomingJwt);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                logger.info("Invalid or missing Authorization header");
+            }
         } catch (Exception e) {
-            logger.info("try to  parse the token , but. . . .");
+            logger.info("Error while trying to parse the token", e);
         }
         filterChain.doFilter(request, response);
     }
+
 }

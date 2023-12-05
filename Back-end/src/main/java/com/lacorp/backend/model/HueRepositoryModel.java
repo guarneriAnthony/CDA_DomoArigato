@@ -28,7 +28,8 @@ public class HueRepositoryModel {
     @Column(name = "last_refresh")
     private Long lastRefresh;
 
-    @OneToOne(mappedBy = "hueAccount")
+    @OneToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserRepositoryModel user;
 
 }
