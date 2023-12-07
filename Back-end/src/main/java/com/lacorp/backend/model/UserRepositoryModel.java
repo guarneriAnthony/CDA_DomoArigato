@@ -40,6 +40,9 @@ public class UserRepositoryModel implements UserDetails {
         this.roleRepositoryModels = roleRepositoryModels;
     }
 
+    public boolean hasHueAccount() {
+        return hueAccount != null;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roleRepositoryModels;

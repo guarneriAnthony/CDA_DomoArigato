@@ -26,10 +26,23 @@ public class HueController {
         hueService.saveAccount(code, state);
     }
 
-    @PutMapping("delete_account")
-    public void delete(){
-        hueService.delete(new HueRepositoryModel());
+    @PutMapping("oauth/delete_account")
+    public void delete(Authentication authentication){
+        hueService.delete(authentication);
     }
-    
+
+
+
+
+
+
+    @GetMapping("get_lights")
+    public String getLights(Authentication authentication) {
+        return hueService.getLights(authentication);
+    }
+
+
+
+
 
 }

@@ -67,25 +67,29 @@ public class HueService {
         hueRepository.save(getAccountInfo(code, state));
     }
 
-
-//    public String getLights(Authentication authentication) {
-//        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
-//        HueRepositoryModel hueRepositoryModel = hueRepository.findByUser(user);
-//        String accessToken = hueRepositoryModel.getAccessToken();
-//        String url = baseUrl + "bridge/" + accessToken + "/lights";
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.add("Authorization", "Bearer " + accessToken);
-//        HttpEntity<String> request = new HttpEntity<>(headers);
-//        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
-//        System.out.println("Lights response: " + response.getBody());
-//        return response.getBody();
-//    }
-
-
-    public void delete(HueRepositoryModel hueRepositoryModel){
+    public void delete(Authentication authentication) {
+        HueRepositoryModel hueRepositoryModel = hueRepository.findById(((UserRepositoryModel) authentication.getPrincipal()).getHueAccount().getId()).get();
         hueRepository.delete(hueRepositoryModel);
     }
+
+
+    public String getLights(Authentication authentication) {
+        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
+        HueRepositoryModel hueRepositoryModel = hueRepository.findById(user.getHueAccount().getId()).get();
+
+        String accessToken = hueRepositoryModel.getAccessToken();
+        String userName = hueRepositoryModel.getUsername();
+        String url = baseUrl + "bridge/" + userName + "/lights";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        return response.getBody();
+    }
+
+
+
 
 
     private HueRepositoryModel getAccountInfo(String code, String state) throws JsonProcessingException {

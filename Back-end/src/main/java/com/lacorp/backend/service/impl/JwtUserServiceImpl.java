@@ -1,7 +1,9 @@
 package com.lacorp.backend.service.impl;
 
 import com.lacorp.backend.execption.AccountExistsException;
+import com.lacorp.backend.model.HueRepositoryModel;
 import com.lacorp.backend.model.UserRepositoryModel;
+import com.lacorp.backend.repository.HueRepository;
 import com.lacorp.backend.repository.RoleRepository;
 import com.lacorp.backend.repository.UserRepository;
 import com.lacorp.backend.service.JwtUserService;
@@ -33,6 +35,8 @@ public class JwtUserServiceImpl implements JwtUserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private HueRepository hueRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -40,9 +44,10 @@ public class JwtUserServiceImpl implements JwtUserService {
         this.signingKey = signingKey;
     }
 
+
     @Override
-    public UserDetails save(String username, String password, String email) throws AccountExistsException {
-        UserDetails existingUser = userRepository.findByUsername(username);
+    public UserRepositoryModel save(String username, String password, String email) throws AccountExistsException {
+        UserRepositoryModel existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             throw new AccountExistsException();
         }
@@ -58,7 +63,6 @@ public class JwtUserServiceImpl implements JwtUserService {
                 .getAuthenticationManager()
                 .authenticate(authentication);
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -87,7 +91,7 @@ public class JwtUserServiceImpl implements JwtUserService {
     @Override
     public String generateJwtForUser(UserDetails user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60);
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24);
         return Jwts
                 .builder()
                 .setSubject(user.getUsername())
@@ -99,7 +103,7 @@ public class JwtUserServiceImpl implements JwtUserService {
     // il faudra changer la clé
     public String generateJwtForHue(UserDetails user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60);
+        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24);
         return Jwts
                 .builder()
                 .setSubject(user.getUsername())
@@ -107,6 +111,11 @@ public class JwtUserServiceImpl implements JwtUserService {
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
+    }
+
+    public UserRepositoryModel updateHueAccount(UserRepositoryModel user, HueRepositoryModel hueAccount) {
+        user.setHueAccount(hueAccount);
+        return userRepository.save(user);
     }
 
 }

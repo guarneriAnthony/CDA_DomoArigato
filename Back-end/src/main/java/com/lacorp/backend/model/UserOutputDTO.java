@@ -7,6 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @AllArgsConstructor
 public class UserOutputDTO {
-    UserDetails username;
+    UserInfoOutputDTO user;
     String token;
 }
