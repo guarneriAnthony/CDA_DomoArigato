@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+:root {
+  --dark: #181B1F;
+  --grey: #2F3135;
+  --logo-lighter-color : #FFC266;
+  --logo-darker-color : #FF644A;
+
+}
+
+.bg-black {
+  background-color: var(--dark) !important;
+}
+.btn{
+  background: linear-gradient(90deg, #FFC266 -1.81%, #FF644A 100%) !important;
+}
+
+
+
+body{
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FF644A 100%);
+  height: 100vh;
+  width: 100vw;
+}

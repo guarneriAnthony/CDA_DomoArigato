@@ -1,0 +1,229 @@
+<main class="container">
+
+  <div class="d-flex justify-content-center align-items-center vh-100">
+
+    <div class="card-group h-75">
+
+      <div *ngIf="sign" class="card bg-black" id="sign-in">
+
+        <div class="card-header border-0 text-center text-white">
+          <h5 class="card-title"><img alt="Logo DomoArigato" src="{{logoPath}}"></h5>
+          <h6 class="card-subtitle mb-2 fst-italic">{{catchPhrase}}</h6>
+        </div>
+
+        <div class="card-body text-white ">
+          <form #userSignInForm="ngForm" (ngSubmit)="signIn()" class="h-100 justify-content-between d-flex flex-column"
+                novalidate>
+            <p>{{signInCatchPhrase}}</p>
+            <div class="container">
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="LogUsername">Username / Email</label>
+                <input
+                  [(ngModel)]="user.username"
+                  class="form-control"
+                  id="LogUsername"
+                  name="username"
+                  required
+                  type="text"
+                />
+              </div>
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="password">Password</label>
+                <input
+                  [(ngModel)]="user.password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  required
+                  type="password"
+                />
+              </div>
+
+            </div>
+
+            <button [disabled]="!userSignInForm.valid" class="btn w-100" type="submit">Submit</button>
+
+          </form>
+
+        </div>
+
+        <div class="card-footer border-0 text-center text-white">
+          <p class="text-center">You don't have an account? <a [routerLink]="['/sign-up']">Sign up</a></p>
+        </div>
+
+      </div>
+
+      <div class="card bg-black" id="intro">
+
+        <div class="card-body text-center h-100 text-white d-flex flex-column justify-content-between">
+          <h2 class="card-title">Greetings, wizards and Muggles alike!</h2>
+          <p class="card-text">
+            Step into the magical realm of our creation, a masterpiece conjured by two coding wizards on a quest for
+            smart home enchantment. Picture this: a Hogwarts for your smart home devices, where gadgets come to life
+            like animated portraits in the corridors.
+          </p>
+          <p class="card-text">
+            Currently, our app is casting spells exclusively for Philips Hue lights, much like Harry with his trusty
+            wand. But fear not, dear user, for our intrepid duo is on a magical journey, a journey to expand our
+            spellbook and include other enchanted devices.
+          </p>
+          <p class="card-text">
+            Envision a future where commanding your smart home feels as effortless as saying "Accio Lights" to brighten
+            up the room. That's the dream we're weaving into reality!
+          </p>
+          <p class="card-text">
+            And here's the magical twist – our journey doesn't end with Philips Hue. Oh no! We're on a quest to discover
+            more magical allies from the enchanted forest of smart home wonders. Imagine your robotic vacuum doing a
+            little jig with your smart thermostat, all orchestrated by our spellbinding app.
+          </p>
+          <p class="card-text">
+            So, fasten your wizarding cloak, brave user, as we embark on a magical journey where your home isn't just
+            smart; it's a haven of enchantments where technology dances to the tune of a magical spell. Stay tuned for
+            updates, because the magical adventure is unfolding, and we're inviting you to join our wizarding
+            fellowship!
+          </p>
+        </div>
+
+      </div>
+
+      <div *ngIf="!sign" class="card bg-black" id="sign-up">
+
+        <div class="card-header border-0 text-center text-white">
+          <h5 class="card-title"><img alt="Logo DomoArigato" src="{{logoPath}}"></h5>
+          <h6 class="card-subtitle mb-2 fst-italic">{{catchPhrase}}</h6>
+        </div>
+
+        <div class="card-body text-white ">
+          <form #userSignUpForm="ngForm" (ngSubmit)="signUp()" class="h-100 justify-content-between d-flex flex-column"
+                novalidate>
+            <p>{{signUpCatchPhrase}}</p>
+
+            <div class="container">
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="RegistrationEmail">Email</label>
+                <input
+                  #emailInput="ngModel"
+                  (blur)="emailInput.control.markAsUntouched()"
+                  (focus)="emailInput.control.markAsTouched()"
+                  [(ngModel)]="user.email"
+                  aria-describedby="emailHelp"
+                  class="form-control"
+                  id="RegistrationEmail"
+                  name="email"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                  required
+                  type="email"
+                />
+                <div *ngIf="(emailInput.control.touched) && emailInput.control.hasError('pattern')"
+                     class="alert alert-danger position-absolute end-0 start-0"
+                     role="alert">
+                  Please enter a valid email address.
+                </div>
+              </div>
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="RegistrationUsername">Username</label>
+                <input
+                  #usernameInput="ngModel"
+                  (blur)="usernameInput.control.markAsUntouched()"
+                  (focus)="usernameInput.control.markAsTouched()"
+                  [(ngModel)]="user.username"
+                  class="form-control"
+                  id="RegistrationUsername"
+                  name="username"
+                  pattern="[a-zA-Z0-9]{3,}"
+                  required
+                  title="Username should contain at least 3 alphanumeric characters"
+                  type="text"
+                />
+                <div *ngIf="usernameInput.control.touched && usernameInput.control.hasError('pattern')"
+                     class="alert alert-danger position-absolute end-0 start-0"
+                     role="alert">
+                  should contain at least 3 characters.
+                </div>
+              </div>
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="RegistrationPassword">Password</label>
+                <input
+                  #passwordInput="ngModel"
+                  (blur)="passwordInput.control.markAsUntouched()"
+                  (focus)="passwordInput.control.markAsTouched()"
+                  [(ngModel)]="user.password"
+                  class="form-control"
+                  id="RegistrationPassword"
+                  name="password"
+                  pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
+                  required
+                  type="password"
+                />
+                <div
+                  *ngIf="passwordInput.control.touched && ( passwordInput.control.hasError('required') || passwordInput.control.hasError('pattern') )"
+                  class="alert alert-danger position-absolute end-0 start-0 z-1"
+                  role="alert">
+                  <div *ngIf="passwordInput.control.hasError('required')">
+                    Password is required.
+                  </div>
+                  <div *ngIf="passwordInput.control.hasError('pattern')">
+                    Password should contain:
+                    <ul>
+                      <li [class.valid-condition]="passwordInput.value && passwordInput.value.match('[A-Z]')">
+                        1 uppercase letter
+                      </li>
+                      <li [class.valid-condition]="passwordInput.value && passwordInput.value.match('[0-9]')">
+                        1 digit
+                      </li>
+                      <li [class.valid-condition]="passwordInput.value && passwordInput.value.match('[!@#$%^&*]')">
+                        1 special character
+                      </li>
+                      <li [class.valid-condition]="passwordInput.value && passwordInput.value.length >= 8">
+                        8 characters or more
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-4 position-relative">
+                <label class="form-label" for="RegistrationHouse">House</label>
+                <input
+                  #houseInput="ngModel"
+                  (blur)="houseInput.control.markAsUntouched()"
+                  (focus)="houseInput.control.markAsTouched()"
+                  class="form-control"
+                  id="RegistrationHouse"
+                  ngModel
+                  pattern="[a-zA-Z0-9]{3,}"
+                  required
+                  type="text"
+                />
+                <div *ngIf="houseInput.control.touched && houseInput.control.hasError('pattern')"
+                     class="alert alert-danger"
+                     role="alert">
+                  House should contain at least 3 characters.
+                </div>
+              </div>
+
+            </div>
+
+            <button [disabled]="!userSignUpForm.valid" class="btn w-100" type="submit">Submit</button>
+
+          </form>
+
+        </div>
+
+        <div class="card-footer border-0 text-center text-white">
+          <p class="text-center">Already have an account? <a [routerLink]="['/sign-in']">Sign in</a></p>
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</main>
