@@ -1,21 +1,20 @@
 package com.lacorp.backend.mapper;
 
 import com.lacorp.backend.model.HueRepositoryModel;
-import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.model.json.hue.OAuthTokenResponse;
 import com.lacorp.backend.model.json.hue.UsernameResponse;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-07T15:05:17+0100",
+    date = "2023-12-08T16:36:28+0100",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 public class HueMapperImpl implements HueMapper {
 
     @Override
-    public HueRepositoryModel toHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh, UserRepositoryModel user) {
-        if ( tokenResponse == null && usernameResponse == null && user == null ) {
+    public HueRepositoryModel toHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh) {
+        if ( tokenResponse == null && usernameResponse == null ) {
             return null;
         }
 
@@ -32,7 +31,6 @@ public class HueMapperImpl implements HueMapper {
             hueRepositoryModel.setUsername( usernameResponse.getUsername() );
         }
         hueRepositoryModel.setLastRefresh( lastRefresh );
-        hueRepositoryModel.setUser( user );
 
         return hueRepositoryModel;
     }

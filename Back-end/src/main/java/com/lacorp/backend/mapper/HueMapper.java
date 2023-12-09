@@ -20,6 +20,5 @@ public interface HueMapper {
     @Mapping(target = "access_token_expires_in", source = "tokenResponse.accessTokenExpiresIn")
     @Mapping(target = "refresh_token_expires_in", source = "tokenResponse.refreshTokenExpiresIn")
     @Mapping(target = "lastRefresh", source = "lastRefresh")
-    @Mapping(target = "user", source = "user")
-    HueRepositoryModel toHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh, UserRepositoryModel user);
+    HueRepositoryModel toHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh);
 }

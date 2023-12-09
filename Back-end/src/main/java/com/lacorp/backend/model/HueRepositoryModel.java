@@ -28,8 +28,5 @@ public class HueRepositoryModel {
     @Column(name = "last_refresh")
     private Long lastRefresh;
 
-    @OneToOne
-    private UserRepositoryModel user;
-
 
 }

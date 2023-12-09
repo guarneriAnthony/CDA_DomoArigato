@@ -79,7 +79,8 @@ public class HueService {
 
         String accessToken = hueRepositoryModel.getAccessToken();
         String userName = hueRepositoryModel.getUsername();
-        String url = baseUrl + "bridge/" + userName + "/lights";
+//        String url = baseUrl + "bridge/" + userName + "/lights";
+        String url = baseUrl + "bridge/" + userName ;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + accessToken);
@@ -97,7 +98,7 @@ public class HueService {
         GenericResponse<UsernameResponse> usernameResponse = getUsername(tokenResponse.getAccessToken());
         long lastRefresh = System.currentTimeMillis();
         UserRepositoryModel user =(UserRepositoryModel) jwtUserService.getUserFromJwt(state);
-        HueRepositoryModel hueRepositoryModel = hueMapper.toHueRepositoryModel(tokenResponse, usernameResponse.getSuccess(), lastRefresh, user);
+        HueRepositoryModel hueRepositoryModel = hueMapper.toHueRepositoryModel(tokenResponse, usernameResponse.getSuccess(), lastRefresh);
         user.setHueAccount(hueRepositoryModel);
         userRepository.save(user);
         return hueRepositoryModel;

@@ -46,10 +46,5 @@ public class SecurityController {
         }
     }
 
-//    @GetMapping("/show_account")
-//        public ResponseEntity<UserOutputDTO> readAccountDomoarigato(Authentication authentication) {
-//        UserDetails user = (UserDetails) authentication.getPrincipal();
-//        return ResponseEntity.ok(new UserOutputDTO(user, null ));
-//    }
 
 }

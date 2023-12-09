@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class UserRepositoryModel implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hue_id", referencedColumnName = "id")
     private HueRepositoryModel hueAccount;
+
+    @OneToMany(mappedBy = "userRepositoryModel", cascade = CascadeType.ALL)
+    private List<HouseRepositoryModel> houseRepositoryModels;
+
 
     public UserRepositoryModel(String username, String password, String email, List<RoleRepositoryModel> roleRepositoryModels) {
         this.username = username;
