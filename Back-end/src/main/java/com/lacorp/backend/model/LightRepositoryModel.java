@@ -21,9 +21,7 @@ public class LightRepositoryModel {
     private String constructor_name;
     @Column(nullable = false)
     private String type;
-
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private RoomRepositoryModel roomRepositoryModel;
+    @Column(nullable = false)
+    private boolean turnedOn;
 
 }

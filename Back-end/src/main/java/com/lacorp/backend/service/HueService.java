@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacorp.backend.execption.HttpStatusErrorException;
 import com.lacorp.backend.mapper.HueMapper;
 import com.lacorp.backend.model.HueRepositoryModel;
+import com.lacorp.backend.model.LightRepositoryModel;
 import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.model.json.hue.GenericResponse;
 import com.lacorp.backend.model.json.hue.LinkButtonResponse;
@@ -71,6 +72,8 @@ public class HueService {
         HueRepositoryModel hueRepositoryModel = hueRepository.findById(((UserRepositoryModel) authentication.getPrincipal()).getHueAccount().getId()).get();
         hueRepository.delete(hueRepositoryModel);
     }
+
+
 
 
     public String getLights(Authentication authentication) {

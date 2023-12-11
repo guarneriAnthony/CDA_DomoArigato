@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,11 +19,13 @@ public class RoomRepositoryModel {
 
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private boolean turnedOn;
 
-    @ManyToOne
-    @JoinColumn(name = "house_id")
-    private HouseRepositoryModel houseRepositoryModel;
-    @OneToMany(mappedBy = "roomRepositoryModel")
-    private List<LightRepositoryModel> lightRepositoryModels;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id")
+    private Set<LightRepositoryModel> lightRepositoryModels;
+
+
 
 }

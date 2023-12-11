@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -34,8 +35,9 @@ public class UserRepositoryModel implements UserDetails {
     @JoinColumn(name = "hue_id", referencedColumnName = "id")
     private HueRepositoryModel hueAccount;
 
-    @OneToMany(mappedBy = "userRepositoryModel", cascade = CascadeType.ALL)
-    private List<HouseRepositoryModel> houseRepositoryModels;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private Set<HouseRepositoryModel> houseRepositoryModels;
 
 
     public UserRepositoryModel(String username, String password, String email, List<RoleRepositoryModel> roleRepositoryModels) {

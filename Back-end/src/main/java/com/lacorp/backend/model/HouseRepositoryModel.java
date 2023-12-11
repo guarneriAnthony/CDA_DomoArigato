@@ -3,7 +3,8 @@ package com.lacorp.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
+
+import java.util.*;
 
 
 @Entity
@@ -16,12 +17,9 @@ public class HouseRepositoryModel {
     private Integer id;
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserRepositoryModel userRepositoryModel;
 
-    @OneToMany(mappedBy = "houseRepositoryModel")
-    private List<RoomRepositoryModel> roomRepositoryModels;
-
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "house_id")
+    private Set<RoomRepositoryModel> roomRepositoryModels;
 
 }
