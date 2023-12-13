@@ -45,10 +45,10 @@ public class LightService {
         }
     }
 
-    public void updateTurnOn(Light light, User user) throws JsonProcessingException {
+    public void TurnOn(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
         switch (constructorName){
-            case "hue":
+            case "Hue":
                 hueService.turnOnLight(light, user);
                 light.setOn(true);
                 lightRepository.save(light);
@@ -56,10 +56,10 @@ public class LightService {
         }
     }
 
-    public void updateTurnOff(Light light, User user) throws JsonProcessingException {
+    public void turnOff(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
         switch (constructorName){
-            case "hue":
+            case "Hue":
                 hueService.turnOffLight(light, user);
                 light.setOn(false);
                 lightRepository.save(light);
@@ -67,13 +67,14 @@ public class LightService {
         }
     }
 
-    public Light saveHue(String lightId, User user) throws JsonProcessingException {
+    public Light saveHue(String lightId, User user, Room room) throws JsonProcessingException {
         JsonNode jsonLight = hueService.getLights(lightId, user);
 
         Light light = new Light();
         light.setConstructor_id(lightId);
         light.setConstructor_name("Hue");
         light.setName(jsonLight.get("name").asText());
+        light.setRoom(room);
 
         return lightRepository.save(light);
     }

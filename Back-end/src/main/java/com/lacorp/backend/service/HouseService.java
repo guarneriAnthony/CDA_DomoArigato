@@ -1,6 +1,7 @@
 package com.lacorp.backend.service;
 
 import com.lacorp.backend.model.House;
+import com.lacorp.backend.model.Room;
 import com.lacorp.backend.model.User;
 import com.lacorp.backend.repository.HouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,37 +51,37 @@ public class HouseService {
         return houseRepository.findByUser(user);
     }
 
-    public House updateHouseTurnedAllOn(Integer id, User user) {
+    public House turnOnAllLightsInHouse(Integer id, User user) {
         if (houseRepository.findById(id).isPresent()) {
             House house = houseRepository.findById(id).get();
-            house.setAllOn(true);
             house.getRooms().forEach(room -> {
-                roomService.updateRoomTurnedAllOn(room, user);
+                roomService.turnOnAllLights(room, user);
             });
+            house.setAllOn(house.getRooms().stream().allMatch(Room::isAllOn));
             return houseRepository.save(house);
         }else {
             return null;
         }
     }
 
-    public House updateHouseTurnedAllOff(Integer id, User user) {
+    public House turnOffAllLightsInHouse(Integer id, User user) {
         if (houseRepository.findById(id).isPresent()) {
             House house = houseRepository.findById(id).get();
-            house.setAllOn(false);
             house.getRooms().forEach(room -> {
-                roomService.updateRoomTurnedAllOff(room, user);
+                roomService.turnOffAllLights(room, user);
             });
+            house.setAllOn(house.getRooms().stream().allMatch(Room::isAllOn));
             return houseRepository.save(house);
         }else {
             return null;
         }
     }
 
-    public House updateHouseTurnedAnyOn(Integer id) {
+    public House refreshHouseAnyOn(Integer id) {
         if (houseRepository.findById(id).isPresent()) {
             House house = houseRepository.findById(id).get();
             house.getRooms().forEach(room -> {
-                roomService.updateRoomTurnedAnyOn(room);
+                roomService.refreshRoomAnyOn(room);
                 if (room.isAnyOn()) {
                     house.setAnyOn(true);
                 }
@@ -91,8 +92,8 @@ public class HouseService {
         }
     }
 
-    public void deleteHouse(House house) {
-        houseRepository.delete(house);
+    public void deleteById(Integer id) {
+        houseRepository.deleteById(id);
     }
 
 }

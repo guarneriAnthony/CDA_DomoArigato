@@ -91,8 +91,7 @@ public class HueService {
         return jwtUserService.updateUser(user);
     }
 
-    public void delete(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public void delete(User user) {
         hueRepository.delete(user.getHueAccount());
     }
 
@@ -182,6 +181,7 @@ public class HueService {
             throw new HttpStatusErrorException("Erreur lors de la récupération des groupes, statut : " + response.getStatusCodeValue());
         }
     }
+
     public JsonNode getLights(String lightId, User user) throws JsonProcessingException {
         AccountHue accountHue = user.getHueAccount();
         String accessToken = accountHue.getAccessToken();
@@ -221,6 +221,7 @@ public class HueService {
             throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + response.getStatusCodeValue());
         }
     }
+
     public void turnOffLight(Light light, User user) throws JsonProcessingException {
         AccountHue accountHue = user.getHueAccount();
         String accessToken = accountHue.getAccessToken();

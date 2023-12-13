@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping()
 public class SecurityController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class SecurityController {
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO dto) throws AccountExistsException {
         User user = userService.save(dto.username(), dto.password(), dto.email());
         House house = houseService.save(user, dto.house());
-        user.addHouse(house);
+        user.setHouses(List.of(house));
         UserInfoOutputDTO userInfoOutputDTO = userMapper.userToUserInfoOutputDTO(user);
         String token = userService.generateJwtForUser(user);
         return ResponseEntity.ok(new UserOutputDTO(userInfoOutputDTO, token));
@@ -51,7 +52,8 @@ public class SecurityController {
             throw new RuntimeException(e);
         }
     }
-    @GetMapping("/houses")
+
+    @GetMapping
     public ResponseEntity<List<House>> getUserHouses(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(houseService.findByUser(user));

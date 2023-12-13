@@ -40,7 +40,6 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public User save(String username, String password, String email) throws AccountExistsException {
-        // je verifie que l'utilisateur n'existe pas avec le username ou l'email
         User existingUsername = userRepository.findByUsername(username);
         User existingEmail = userRepository.findByEmail(email);
 
@@ -59,6 +58,7 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public Authentication authenticate(String username, String password) throws Exception {
+        System.out.println("authentication = ");
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationConfiguration
                 .getAuthenticationManager()
@@ -67,7 +67,6 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public User loadUserByUsername(String login) throws UsernameNotFoundException {
-        // je recherche l'utilisateur par son username ou son email
         User userByUsername = userRepository.findByUsername(login);
         User userByEmail = userRepository.findByEmail(login);
 

@@ -19,9 +19,9 @@ public class Room {
     @Column(nullable = false)
     private String name;
     @Column(name = "all_on")
-    private boolean allOn;
+    private boolean allOn = false;
     @Column(name = "any_on")
-    private boolean anyOn;
+    private boolean anyOn = false;
 
     @ManyToOne
     @JoinColumn(name = "house_id")

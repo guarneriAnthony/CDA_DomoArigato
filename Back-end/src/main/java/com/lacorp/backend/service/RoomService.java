@@ -10,7 +10,6 @@ import com.lacorp.backend.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,23 +46,23 @@ public class RoomService {
             return null;
         }
     }
-    public void updateRoomTurnedAllOn(Room room, User user) {
-        room.setAllOn(true);
+    public void turnOnAllLights(Room room, User user) {
         room.getLights().forEach(light -> {
             try {
-                lightService.updateTurnOn(light, user);
+                lightService.TurnOn(light, user);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         });
+        room.setAllOn(room.getLights().stream().allMatch(Light::isOn));
         roomRepository.save(room);
     }
 
-    public void updateRoomTurnedAllOff(Room room, User user){
+    public void turnOffAllLights(Room room, User user){
         room.setAllOn(false);
         room.getLights().forEach(light -> {
             try {
-                lightService.updateTurnOff(light, user);
+                lightService.turnOff(light, user);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -71,7 +70,7 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-    public void updateRoomTurnedAnyOn(Room room) {
+    public void refreshRoomAnyOn(Room room) {
         room.getLights().forEach(light -> {
             if (light.isOn()){
                 room.setAnyOn(true);
@@ -84,17 +83,9 @@ public class RoomService {
         roomRepository.delete(room);
     }
 
+    public List<Room> saveRoomsWithHueAccount(Integer houseId, User user) throws JsonProcessingException {
+        House house = user.getHouses().get(houseId);
 
-
-
-
-
-
-
-
-
-
-    public void saveRoomsWithHueAccount(User user) throws JsonProcessingException {
         JsonNode rooms = hueService.getRooms(user);
         rooms.forEach(room -> {
             String name = room.get("name").asText();
@@ -103,21 +94,22 @@ public class RoomService {
 
                 Room roomModel = new Room();
                 roomModel.setName(name);
-                List<Light> lights = new ArrayList<>();
+                roomModel.setHouse(house);
+
+                // comprends pas pourquoi mais je dois faire comme ça
+                Room finalRoomModel = roomRepository.save(roomModel);
 
                 room.get("lights").forEach(light -> {
                     String lightId = light.asText();
                     try {
-                        lights.add(lightService.saveHue(lightId, user));
+                        lightService.saveHue(lightId, user, finalRoomModel);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-
                 });
-                roomModel.setLights(lights);
-                roomRepository.save(roomModel);
             }
         });
+        return roomRepository.findByHouse(house);
     }
 
     public Room getRoomById(Integer id) {

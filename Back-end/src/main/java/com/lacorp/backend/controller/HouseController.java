@@ -1,5 +1,6 @@
 package com.lacorp.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lacorp.backend.model.*;
 import com.lacorp.backend.service.HouseService;
 import com.lacorp.backend.service.LightService;
@@ -43,20 +44,20 @@ public class HouseController {
     @PutMapping("/{house_id}/turn_on")
     public ResponseEntity<House> updateHouseTurnedAllOn(@PathVariable Integer house_id, Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(houseService.updateHouseTurnedAllOn(house_id, user));
+        return ResponseEntity.ok(houseService.turnOnAllLightsInHouse(house_id, user));
     }
     @PutMapping("/{house_id}/turn_off")
     public ResponseEntity<House> updateHouseTurnedAllOff(@PathVariable Integer house_id, Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(houseService.updateHouseTurnedAllOff(house_id, user));
+        return ResponseEntity.ok(houseService.turnOffAllLightsInHouse(house_id, user));
     }
-    @PutMapping("/{house_id}/turn_any_on")
+    @PutMapping("/{house_id}/refresh/any_on")
     public ResponseEntity<House> updateHouseTurnedAnyOn(@PathVariable Integer house_id){
-        return ResponseEntity.ok(houseService.updateHouseTurnedAnyOn(house_id));
+        return ResponseEntity.ok(houseService.refreshHouseAnyOn(house_id));
     }
     @DeleteMapping("/{house_id}")
     public ResponseEntity<Boolean> deleteHouse(@PathVariable Integer house_id){
-        houseService.deleteHouse(houseService.findById(house_id));
+        houseService.deleteById(house_id);
         return ResponseEntity.ok(true);
     }
     @PostMapping("/{house_id}/room")
@@ -69,6 +70,11 @@ public class HouseController {
     public ResponseEntity<List<Room>> FindRoomsByHouse(@PathVariable Integer house_id){
         House house = houseService.findById(house_id);
         return ResponseEntity.ok(roomService.findByHouse(house));
+    }
+    @PutMapping("{house_id}/room/refresh")
+    public ResponseEntity<List<Room>> refreshHueRooms(@PathVariable Integer house_id, Authentication authentication) throws JsonProcessingException {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(roomService.saveRoomsWithHueAccount(house_id, user));
     }
     @GetMapping("/room/{room_id}")
     public ResponseEntity<Room> findRoomById(@PathVariable Integer room_id){

@@ -20,8 +20,9 @@ public class Light {
     private String constructor_id;
     @Column(nullable = false)
     private String constructor_name;
+
     @Column(nullable = false)
-    private boolean on;
+    private boolean isOn = false;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
