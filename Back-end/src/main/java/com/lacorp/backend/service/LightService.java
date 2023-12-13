@@ -1,6 +1,8 @@
 package com.lacorp.backend.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.lacorp.backend.model.HueRepositoryModel;
 import com.lacorp.backend.model.LightRepositoryModel;
 import com.lacorp.backend.model.UserRepositoryModel;
@@ -20,6 +22,8 @@ public class LightService {
     private LightRepository lightRepository;
     @Autowired
     private HueRepository hueRepository;
+    @Autowired
+    private  HueService hueService;
 
     @Value("${api.hue.baseUrl}")
     private String baseUrl;
@@ -54,4 +58,32 @@ public class LightService {
         ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class);
         return response.getBody();
     }
+
+    public String getHueLights(Authentication authentication) {
+        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
+        HueRepositoryModel hueRepositoryModel = hueRepository.findById(user.getHueAccount().getId()).get();
+        String accessToken = hueRepositoryModel.getAccessToken();
+        String userName = hueRepositoryModel.getUsername();
+        String url = baseUrl + "bridge/" + userName +"/lights";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        return response.getBody();
+    }
+
+
+    public LightRepositoryModel saveHueLight(String lightId, UserRepositoryModel user) throws JsonProcessingException {
+        JsonNode jsonLight = hueService.getLight(user, lightId);
+        LightRepositoryModel light = new LightRepositoryModel();
+        light.setConstructor_id(lightId);
+        light.setConstructor_name("Hue");
+        light.setName(jsonLight.get("name").asText());
+        return lightRepository.save(light);
+    }
+
+
+
+
 }

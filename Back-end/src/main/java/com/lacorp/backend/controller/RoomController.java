@@ -18,13 +18,13 @@ public class RoomController {
 
 
     @PutMapping("/{roomId}/lights/on")
-    public void turnOnAllLights(@PathVariable Integer roomId, Authentication authentication) {
+    public ResponseEntity<RoomRepositoryModel> turnOnAllLights(@PathVariable Integer roomId, Authentication authentication) {
         RoomRepositoryModel room = roomService.getRoomById(roomId);
         if (room != null){
             roomService.turnOnAllLights(room, (Authentication) authentication);
-            //return ResponseEntity.ok(room);
+            return ResponseEntity.ok(room);
         } else {
-           // return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/{roomId}/lights/off")

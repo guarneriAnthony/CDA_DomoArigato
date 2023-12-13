@@ -2,11 +2,13 @@ package com.lacorp.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacorp.backend.execption.HttpStatusErrorException;
 import com.lacorp.backend.mapper.HueMapper;
 import com.lacorp.backend.model.HueRepositoryModel;
 import com.lacorp.backend.model.LightRepositoryModel;
+import com.lacorp.backend.model.RoomRepositoryModel;
 import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.model.json.hue.GenericResponse;
 import com.lacorp.backend.model.json.hue.LinkButtonResponse;
@@ -50,6 +52,7 @@ public class HueService {
     @Autowired
     private UserRepository userRepository;
 
+
     public static void printResponseEntity(ResponseEntity<String> responseEntity) {
         System.out.println("StatusCode: " + responseEntity.getStatusCode());
         System.out.println("Headers: " + responseEntity.getHeaders());
@@ -64,8 +67,15 @@ public class HueService {
                 baseUrl, clientId, appId, deviceId, deviceName, encodeJWT);
     }
 
-    public void saveAccount(String code, String state) throws JsonProcessingException {
-        hueRepository.save(getAccountInfo(code, state));
+    public UserRepositoryModel saveAccount(String code, String state) throws JsonProcessingException {
+        OAuthTokenResponse tokenResponse = getToken(code);
+        GenericResponse<UsernameResponse> usernameResponse = getUsername(tokenResponse.getAccessToken());
+        long lastRefresh = System.currentTimeMillis();
+        UserRepositoryModel user =(UserRepositoryModel) jwtUserService.getUserFromJwt(state);
+        HueRepositoryModel hueRepositoryModel = hueMapper.toHueRepositoryModel(tokenResponse, usernameResponse.getSuccess(), lastRefresh);
+        user.setHueAccount(hueRepositoryModel);
+        userRepository.save(user);
+        return user;
     }
 
     public void delete(Authentication authentication) {
@@ -75,15 +85,24 @@ public class HueService {
 
 
 
-
-    public String getLights(Authentication authentication) {
-        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
-        HueRepositoryModel hueRepositoryModel = hueRepository.findById(user.getHueAccount().getId()).get();
-
+    public JsonNode getGroups(UserRepositoryModel user) throws JsonProcessingException {
+        HueRepositoryModel hueRepositoryModel = user.getHueAccount();
         String accessToken = hueRepositoryModel.getAccessToken();
         String userName = hueRepositoryModel.getUsername();
-//        String url = baseUrl + "bridge/" + userName + "/lights";
-        String url = baseUrl + "bridge/" + userName ;
+        String url = baseUrl + "bridge/" + userName + "/groups";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        return objectMapper.readTree(response.getBody());
+    }
+
+    public String getLights(UserRepositoryModel user) {
+        HueRepositoryModel hueRepositoryModel = user.getHueAccount();
+        String accessToken = hueRepositoryModel.getAccessToken();
+        String userName = hueRepositoryModel.getUsername();
+        String url = baseUrl + "bridge/" + userName +"/lights";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + accessToken);
@@ -91,21 +110,22 @@ public class HueService {
         ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
         return response.getBody();
     }
+    public JsonNode getLight(UserRepositoryModel user, String lightId) throws JsonProcessingException {
+        String accessToken = user.getHueAccount().getAccessToken();
+        String userName = user.getHueAccount().getUsername();
+        String url = baseUrl + "bridge/" + userName +"/lights/" +lightId;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> request = new HttpEntity<>(headers);
 
-
-
-
-    private HueRepositoryModel getAccountInfo(String code, String state) throws JsonProcessingException {
-        OAuthTokenResponse tokenResponse = getToken(code);
-        GenericResponse<UsernameResponse> usernameResponse = getUsername(tokenResponse.getAccessToken());
-        long lastRefresh = System.currentTimeMillis();
-        UserRepositoryModel user =(UserRepositoryModel) jwtUserService.getUserFromJwt(state);
-        HueRepositoryModel hueRepositoryModel = hueMapper.toHueRepositoryModel(tokenResponse, usernameResponse.getSuccess(), lastRefresh);
-        user.setHueAccount(hueRepositoryModel);
-        userRepository.save(user);
-        return hueRepositoryModel;
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        System.out.printf("getLight" + response.getBody());
+        return objectMapper.readTree(response.getBody());
     }
+
+
 
     private OAuthTokenResponse getToken(String code) throws JsonProcessingException, HttpStatusErrorException {
         String url = baseUrl + "oauth2/token";

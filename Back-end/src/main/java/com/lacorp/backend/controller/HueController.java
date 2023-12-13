@@ -1,7 +1,10 @@
 package com.lacorp.backend.controller;
 
 import com.lacorp.backend.model.HueRepositoryModel;
+import com.lacorp.backend.model.UserInfoOutputDTO;
+import com.lacorp.backend.model.UserRepositoryModel;
 import com.lacorp.backend.service.HueService;
+import com.lacorp.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +14,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping(path = "hue")
 public class HueController {
-
+    @Autowired
+    private RoomService roomService;
     @Autowired
     private HueService hueService;
 
@@ -23,7 +27,8 @@ public class HueController {
 
     @GetMapping("oauth/callback")
     private void callback(@RequestParam("code") String code,@RequestParam("state") String state) throws IOException {
-        hueService.saveAccount(code, state);
+        UserRepositoryModel user = hueService.saveAccount(code, state);
+        roomService.updateRoomsFromHueGroups(user);
     }
 
     @PutMapping("oauth/delete_account")
@@ -38,7 +43,8 @@ public class HueController {
 
     @GetMapping("get_lights")
     public String getLights(Authentication authentication) {
-        return hueService.getLights(authentication);
+        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
+        return hueService.getLights(user);
     }
 
 

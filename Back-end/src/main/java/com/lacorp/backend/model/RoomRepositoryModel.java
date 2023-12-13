@@ -1,5 +1,6 @@
 package com.lacorp.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,11 @@ public class RoomRepositoryModel {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
-    private Set<LightRepositoryModel> lightRepositoryModels;
+    private List<LightRepositoryModel> lightRepositoryModels;
+
+    public void addLight(LightRepositoryModel light){
+        lightRepositoryModels.add(light);
+    }
 
 
 

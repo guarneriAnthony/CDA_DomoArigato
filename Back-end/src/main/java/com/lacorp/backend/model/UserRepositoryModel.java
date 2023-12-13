@@ -37,8 +37,7 @@ public class UserRepositoryModel implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private Set<HouseRepositoryModel> houseRepositoryModels;
-
+    private List<HouseRepositoryModel> houseRepositoryModels;
 
     public UserRepositoryModel(String username, String password, String email, List<RoleRepositoryModel> roleRepositoryModels) {
         this.username = username;

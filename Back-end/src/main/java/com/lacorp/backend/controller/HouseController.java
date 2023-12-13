@@ -27,10 +27,10 @@ public class HouseController {
 
 
     @GetMapping("/houses")
-    public  ResponseEntity<Set<HouseRepositoryModel>> getUserHouses(Authentication authentication){
+    public  ResponseEntity<List<HouseRepositoryModel>> getUserHouses(Authentication authentication){
         UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
         if (user != null){
-            Set<HouseRepositoryModel> userHouses = user.getHouseRepositoryModels();
+            List<HouseRepositoryModel> userHouses = user.getHouseRepositoryModels();
             return ResponseEntity.ok(userHouses);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
