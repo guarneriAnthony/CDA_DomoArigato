@@ -1,11 +1,10 @@
 package com.lacorp.backend.service;
 
 
-import com.lacorp.backend.model.HueRepositoryModel;
-import com.lacorp.backend.model.LightRepositoryModel;
-import com.lacorp.backend.model.UserRepositoryModel;
+import com.lacorp.backend.model.AccountHue;
+import com.lacorp.backend.model.Light;
+import com.lacorp.backend.model.User;
 import com.lacorp.backend.repository.HueRepository;
-import com.lacorp.backend.repository.LightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -17,19 +16,17 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LightService {
     @Autowired
-    private LightRepository lightRepository;
-    @Autowired
     private HueRepository hueRepository;
 
     @Value("${api.hue.baseUrl}")
     private String baseUrl;
 
 
-    public String turnOnLight(LightRepositoryModel light, Authentication authentication) {
-        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
-        HueRepositoryModel hueRepositoryModel = hueRepository.findById(user.getHueAccount().getId()).get();
-        String accessToken = hueRepositoryModel.getAccessToken();
-        String userName = hueRepositoryModel.getUsername();
+    public String turnOnLight(Light light, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        AccountHue accountHue = hueRepository.findById(user.getHueAccount().getId()).get();
+        String accessToken = accountHue.getAccessToken();
+        String userName = accountHue.getUsername();
         String url = baseUrl + "bridge/" + userName + "/lights/" + light.getConstructor_id() + "/state";
         String bodyJSON = "{ \"on\": true }";
         HttpHeaders headers = new HttpHeaders();
@@ -40,11 +37,11 @@ public class LightService {
         return response.getBody();
     }
 
-    public String turnOffLight(LightRepositoryModel light, Authentication authentication) {
-        UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
-        HueRepositoryModel hueRepositoryModel = hueRepository.findById(user.getHueAccount().getId()).get();
-        String accessToken = hueRepositoryModel.getAccessToken();
-        String userName = hueRepositoryModel.getUsername();
+    public String turnOffLight(Light light, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        AccountHue accountHue = hueRepository.findById(user.getHueAccount().getId()).get();
+        String accessToken = accountHue.getAccessToken();
+        String userName = accountHue.getUsername();
         String url = baseUrl + "bridge/" + userName + "/lights/" + light.getConstructor_id() + "/state";
         String bodyJSON = "{ \"on\": false }";
         HttpHeaders headers = new HttpHeaders();

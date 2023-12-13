@@ -1,7 +1,6 @@
 package com.lacorp.backend.mapper;
 
-import com.lacorp.backend.model.HueRepositoryModel;
-import com.lacorp.backend.model.UserRepositoryModel;
+import com.lacorp.backend.model.AccountHue;
 import com.lacorp.backend.model.json.hue.OAuthTokenResponse;
 import com.lacorp.backend.model.json.hue.UsernameResponse;
 import org.mapstruct.Mapper;
@@ -20,5 +19,5 @@ public interface HueMapper {
     @Mapping(target = "access_token_expires_in", source = "tokenResponse.accessTokenExpiresIn")
     @Mapping(target = "refresh_token_expires_in", source = "tokenResponse.refreshTokenExpiresIn")
     @Mapping(target = "lastRefresh", source = "lastRefresh")
-    HueRepositoryModel toHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh);
+    AccountHue toAccountHueRepositoryModel(OAuthTokenResponse tokenResponse, UsernameResponse usernameResponse, long lastRefresh);
 }

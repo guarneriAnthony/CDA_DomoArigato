@@ -1,6 +1,6 @@
 package com.lacorp.backend.service;
 
-import com.lacorp.backend.model.RoomRepositoryModel;
+import com.lacorp.backend.model.Room;
 import com.lacorp.backend.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,9 +19,9 @@ public class RoomService {
     private HueService hueService;
 
 
-    public void turnOnAllLights(RoomRepositoryModel room, Authentication authentication) {
-        room.getLightRepositoryModels().forEach(light -> light.setTurnedOn(true));
-        room.getLightRepositoryModels().forEach(light  -> {
+    public void turnOnAllLights(Room room, Authentication authentication) {
+        room.getLights().forEach(light -> light.setTurnedOn(true));
+        room.getLights().forEach(light  -> {
             if (Objects.equals(light.getConstructor_name(), "Hue")) {
                lightService.turnOnLight(light, authentication);
                 System.out.println("ici" +light);
@@ -32,9 +32,9 @@ public class RoomService {
         room.setTurnedOn(true);
         roomRepository.save(room);
     }
-    public void turnOffAllLights(RoomRepositoryModel room, Authentication authentication) {
-        room.getLightRepositoryModels().forEach(light -> light.setTurnedOn(false));
-        room.getLightRepositoryModels().forEach(light  -> {
+    public void turnOffAllLights(Room room, Authentication authentication) {
+        room.getLights().forEach(light -> light.setTurnedOn(false));
+        room.getLights().forEach(light  -> {
             if (Objects.equals(light.getConstructor_name(), "Hue")) {
                 lightService.turnOffLight(light, authentication);
             } else if (Objects.equals(light.getConstructor_name(), "Goove")) {
@@ -47,7 +47,7 @@ public class RoomService {
 
 
 
-    public RoomRepositoryModel getRoomById(Integer id) {
+    public Room getRoomById(Integer id) {
         return roomRepository.findById(id).get();
     }
 }

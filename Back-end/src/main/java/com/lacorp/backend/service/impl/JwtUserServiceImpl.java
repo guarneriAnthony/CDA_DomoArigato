@@ -1,9 +1,7 @@
 package com.lacorp.backend.service.impl;
 
 import com.lacorp.backend.execption.AccountExistsException;
-import com.lacorp.backend.model.HueRepositoryModel;
-import com.lacorp.backend.model.UserRepositoryModel;
-import com.lacorp.backend.repository.HueRepository;
+import com.lacorp.backend.model.User;
 import com.lacorp.backend.repository.RoleRepository;
 import com.lacorp.backend.repository.UserRepository;
 import com.lacorp.backend.service.JwtUserService;
@@ -27,7 +25,8 @@ import java.util.List;
 @Service
 public class JwtUserServiceImpl implements JwtUserService {
 
-    private final String signingKey;
+    @Value("${jwt.signing.key}")
+    private String signingKey;
     @Autowired
     AuthenticationConfiguration authenticationConfiguration;
     @Autowired
@@ -35,25 +34,27 @@ public class JwtUserServiceImpl implements JwtUserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private HueRepository hueRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
-    public JwtUserServiceImpl(@Value("${jwt.signing.key}") String signingKey) {
-        this.signingKey = signingKey;
-    }
-
 
     @Override
-    public UserRepositoryModel save(String username, String password, String email) throws AccountExistsException {
-        UserRepositoryModel existingUser = userRepository.findByUsername(username);
-        if (existingUser != null) {
+    public User save(String username, String password, String email) throws AccountExistsException {
+        // je verifie que l'utilisateur n'existe pas avec le username ou l'email
+        User existingUsername = userRepository.findByUsername(username);
+        User existingEmail = userRepository.findByEmail(email);
+
+        if (existingUsername != null || existingEmail != null) {
             throw new AccountExistsException();
         }
-        UserRepositoryModel userRepositoryModel = new UserRepositoryModel(username, passwordEncoder.encode(password), email, List.of(roleRepository.getRoleByName("USER")));
-        userRepository.save(userRepositoryModel);
-        return userRepositoryModel;
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setRoles(List.of(roleRepository.getRoleByName("USER")));
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -65,12 +66,17 @@ public class JwtUserServiceImpl implements JwtUserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserRepositoryModel userRepositoryModel = userRepository.findByUsername(login);
-        if (userRepositoryModel == null) {
+    public User loadUserByUsername(String login) throws UsernameNotFoundException {
+        // je recherche l'utilisateur par son username ou son email
+        User userByUsername = userRepository.findByUsername(login);
+        User userByEmail = userRepository.findByEmail(login);
+
+        if (userByUsername == null && userByEmail == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return userRepositoryModel;
+
+        //Si userByUsername n'est pas null, on renvoie userByUsername sinon on renvoie userByEmail
+        return userByUsername != null ? userByUsername : userByEmail;
     }
 
     @Override
@@ -100,10 +106,14 @@ public class JwtUserServiceImpl implements JwtUserService {
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
     }
-    // il faudra changer la clé
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
     public String generateJwtForHue(UserDetails user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000 * 60 * 60 * 24);
+        Date expiryDate = new Date(now.getTime() + 1000 * 60);
         return Jwts
                 .builder()
                 .setSubject(user.getUsername())
@@ -113,9 +123,5 @@ public class JwtUserServiceImpl implements JwtUserService {
                 .compact();
     }
 
-    public UserRepositoryModel updateHueAccount(UserRepositoryModel user, HueRepositoryModel hueAccount) {
-        user.setHueAccount(hueAccount);
-        return userRepository.save(user);
-    }
 
 }

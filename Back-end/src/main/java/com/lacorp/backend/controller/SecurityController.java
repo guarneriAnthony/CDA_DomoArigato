@@ -4,27 +4,33 @@ import com.lacorp.backend.execption.AccountExistsException;
 import com.lacorp.backend.execption.UnauthorizedException;
 import com.lacorp.backend.mapper.UserMapper;
 import com.lacorp.backend.model.*;
+import com.lacorp.backend.service.HouseService;
 import com.lacorp.backend.service.impl.JwtUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class SecurityController {
 
     @Autowired
     private JwtUserServiceImpl userService;
+    @Autowired
+    private HouseService houseService;
 
     private  final UserMapper userMapper = UserMapper.INSTANCE;
 
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO dto) throws AccountExistsException {
-        UserRepositoryModel user = userService.save(dto.username(), dto.password(), dto.email());
-        UserInfoOutputDTO userInfoOutputDTO = userMapper.userDetailsToUserInfoOutputDTO(user);
+        User user = userService.save(dto.username(), dto.password(), dto.email());
+        House house = houseService.createHouse(user, dto.house());
+        user.addHouse(house);
+        UserInfoOutputDTO userInfoOutputDTO = userMapper.userToUserInfoOutputDTO(user);
         String token = userService.generateJwtForUser(user);
         return ResponseEntity.ok(new UserOutputDTO(userInfoOutputDTO, token));
     }
@@ -35,8 +41,8 @@ public class SecurityController {
         try {
             authentication = userService.authenticate(userInputDTO.username(), userInputDTO.password());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            UserRepositoryModel user = (UserRepositoryModel) authentication.getPrincipal();
-            UserInfoOutputDTO userInfoOutputDTO = userMapper.userDetailsToUserInfoOutputDTO(user);
+            User user = (User) authentication.getPrincipal();
+            UserInfoOutputDTO userInfoOutputDTO = userMapper.userToUserInfoOutputDTO(user);
             String token = userService.generateJwtForUser(user);
             return ResponseEntity.ok(new UserOutputDTO(userInfoOutputDTO, token));
         } catch (AuthenticationException e) {
@@ -45,6 +51,5 @@ public class SecurityController {
             throw new RuntimeException(e);
         }
     }
-
 
 }

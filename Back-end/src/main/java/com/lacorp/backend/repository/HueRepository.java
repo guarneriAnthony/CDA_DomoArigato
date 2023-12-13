@@ -1,10 +1,8 @@
 package com.lacorp.backend.repository;
 
 
-import com.lacorp.backend.model.HueRepositoryModel;
+import com.lacorp.backend.model.AccountHue;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
-
-public interface HueRepository extends CrudRepository<HueRepositoryModel, Integer> {
+public interface HueRepository extends CrudRepository<AccountHue, Integer> {
 }
