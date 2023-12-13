@@ -20,10 +20,16 @@ public class House {
     private Integer id;
     @Column
     private String name;
-    @Column(name = "turned_on")
-    private boolean turnedOn = false;
+    @Column(name = "all_on")
+    private boolean allOn = false;
+    @Column(name = "any_on")
+    private boolean anyOn = false;
     @Column
     private boolean favorite = false;
+
+    public void addRoom(Room room) {
+        rooms.add(room);
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")

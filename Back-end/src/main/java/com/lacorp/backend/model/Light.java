@@ -21,9 +21,7 @@ public class Light {
     @Column(nullable = false)
     private String constructor_name;
     @Column(nullable = false)
-    private String type;
-    @Column(nullable = false)
-    private boolean turnedOn;
+    private boolean on;
 
     @ManyToOne
     @JoinColumn(name = "room_id")

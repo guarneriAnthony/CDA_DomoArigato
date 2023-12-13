@@ -28,7 +28,7 @@ public class SecurityController {
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO dto) throws AccountExistsException {
         User user = userService.save(dto.username(), dto.password(), dto.email());
-        House house = houseService.createHouse(user, dto.house());
+        House house = houseService.save(user, dto.house());
         user.addHouse(house);
         UserInfoOutputDTO userInfoOutputDTO = userMapper.userToUserInfoOutputDTO(user);
         String token = userService.generateJwtForUser(user);
@@ -50,6 +50,11 @@ public class SecurityController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    @GetMapping("/houses")
+    public ResponseEntity<List<House>> getUserHouses(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(houseService.findByUser(user));
     }
 
 }

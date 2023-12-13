@@ -2,11 +2,13 @@ package com.lacorp.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lacorp.backend.execption.HttpStatusErrorException;
 import com.lacorp.backend.execption.UnauthorizedException;
 import com.lacorp.backend.mapper.HueMapper;
 import com.lacorp.backend.model.AccountHue;
+import com.lacorp.backend.model.Light;
 import com.lacorp.backend.model.User;
 import com.lacorp.backend.model.json.hue.GenericResponse;
 import com.lacorp.backend.model.json.hue.LinkButtonResponse;
@@ -60,7 +62,7 @@ public class HueService {
 
         String state = jwtUserService.generateJwtForHue(user);
 
-        String deviceId = user.getUsername() + "deviceId";
+        String deviceId = user.getUsername() + "_device";
 
         return String.format("%soauth2/auth?" +
                         "clientid=%s" +
@@ -72,20 +74,21 @@ public class HueService {
                 baseUrl, clientId, appId, deviceId, deviceName, state);
     }
 
-    public void saveAccount(String code, String state) throws JsonProcessingException, UnauthorizedException {
+    public User saveAccount(String code, String state) throws JsonProcessingException, UnauthorizedException {
         User user = (User) jwtUserService.getUserFromJwt(state);
+        String username = user.getUsername() + "_device";
         if (user == null) {
             throw new UnauthorizedException();
         }
 
         OAuthTokenResponse tokenResponse = getToken(code);
-        GenericResponse<UsernameResponse> usernameResponse = getUsername(tokenResponse.getAccessToken());
+        GenericResponse<UsernameResponse> usernameResponse = getUsername(tokenResponse.getAccessToken(), username);
         long lastRefresh = System.currentTimeMillis();
 
         AccountHue accountHue = hueMapper.toAccountHueRepositoryModel(tokenResponse, usernameResponse.getSuccess(), lastRefresh);
         user.setHueAccount(accountHue);
 
-        jwtUserService.updateUser(user);
+        return jwtUserService.updateUser(user);
     }
 
     public void delete(Authentication authentication) {
@@ -136,11 +139,11 @@ public class HueService {
         }
     }
 
-    private GenericResponse<UsernameResponse> getUsername(String accessToken) throws JsonProcessingException, HttpStatusErrorException {
+    private GenericResponse<UsernameResponse> getUsername(String accessToken, String username) throws JsonProcessingException, HttpStatusErrorException {
         if (pressButton(accessToken).getSuccess().isLinkButton()) {
             String url = baseUrl + "bridge/";
 
-            String bodyJSON = "{ \"devicetype\": \"PandaDeviceTest\" }";
+            String bodyJSON = "{ \"devicetype\": \"" + username + "\" }";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -160,5 +163,84 @@ public class HueService {
             throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + pressButton(accessToken).getSuccess().isLinkButton());
         }
     }
+
+    public JsonNode getRooms(User user) throws JsonProcessingException {
+        AccountHue accountHue = user.getHueAccount();
+        String accessToken = accountHue.getAccessToken();
+        String url = baseUrl + "bridge/" + accountHue.getUsername() + "/groups";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return objectMapper.readTree(response.getBody());
+        }else {
+            throw new HttpStatusErrorException("Erreur lors de la récupération des groupes, statut : " + response.getStatusCodeValue());
+        }
+    }
+    public JsonNode getLights(String lightId, User user) throws JsonProcessingException {
+        AccountHue accountHue = user.getHueAccount();
+        String accessToken = accountHue.getAccessToken();
+        String url = baseUrl + "bridge/" + accountHue.getUsername() + "/lights/" + lightId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return objectMapper.readTree(response.getBody());
+        }else {
+            throw new HttpStatusErrorException("Erreur lors de la récupération des groupes, statut : " + response.getStatusCodeValue());
+        }
+    }
+
+    public void turnOnLight(Light light, User user) throws JsonProcessingException {
+        AccountHue accountHue = user.getHueAccount();
+        String accessToken = accountHue.getAccessToken();
+        String url = baseUrl + "bridge/" + accountHue.getUsername() + "/lights/" + light.getConstructor_id() + "/state";
+
+        String bodyJSON = "{ \"on\": true }";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(bodyJSON, headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            objectMapper.readTree(response.getBody());
+        }else {
+            throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + response.getStatusCodeValue());
+        }
+    }
+    public void turnOffLight(Light light, User user) throws JsonProcessingException {
+        AccountHue accountHue = user.getHueAccount();
+        String accessToken = accountHue.getAccessToken();
+        String url = baseUrl + "bridge/" + accountHue.getUsername() + "/lights/" + light.getConstructor_id() + "/state";
+
+        String bodyJSON = "{ \"on\": false }";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(bodyJSON, headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            objectMapper.readTree(response.getBody());
+        }else {
+            throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + response.getStatusCodeValue());
+        }
+    }
+
 
 }

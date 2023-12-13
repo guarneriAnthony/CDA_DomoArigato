@@ -107,8 +107,8 @@ public class JwtUserServiceImpl implements JwtUserService {
                 .compact();
     }
 
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     public String generateJwtForHue(UserDetails user) {

@@ -18,8 +18,10 @@ public class Room {
 
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private boolean turnedOn;
+    @Column(name = "all_on")
+    private boolean allOn;
+    @Column(name = "any_on")
+    private boolean anyOn;
 
     @ManyToOne
     @JoinColumn(name = "house_id")
@@ -28,4 +30,9 @@ public class Room {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Light> lights;
+
+    public void addLight(Light light) {
+        lights.add(light);
+    }
+
 }
