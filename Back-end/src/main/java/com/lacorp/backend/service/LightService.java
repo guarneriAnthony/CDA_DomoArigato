@@ -32,7 +32,11 @@ public class LightService {
     }
 
     public Light findById(Integer lightId) {
-        return lightRepository.findById(lightId).get();
+        if (lightRepository.findById(lightId).isPresent()) {
+            return lightRepository.findById(lightId).get();
+        } else {
+            return null;
+        }
     }
 
     public Light updateLightName(Integer lightId, String name) {

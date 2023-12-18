@@ -1,9 +1,11 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import { UserAuthentification } from "../interface/userAuthentification";
-import { FormsModule } from "@angular/forms";
+import {UserSignUp} from "../interface/user/userSignUp";
+import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {AuthService} from "../service/auth.service";
+import {UserSignIn} from "../interface/user/userSignIn";
+import {User} from "../interface/user/user";
 
 @Component({
   selector: 'app-accueil',
@@ -15,8 +17,10 @@ import {AuthService} from "../service/auth.service";
 })
 export class AccueilComponent implements OnInit {
   sign: boolean = true;
+  errorMessage: string = ''
 
-  constructor(private route : ActivatedRoute, private service: AuthService) {}
+  constructor(private route: ActivatedRoute, private service: AuthService) {
+  }
 
   ngOnInit() {
     this.sign = this.route.snapshot.url[0].path === "sign-in";
@@ -27,26 +31,60 @@ export class AccueilComponent implements OnInit {
   signInCatchPhrase: string = "\"Welcome back! Log in to your account and continue your seamless experience with us.\""
   signUpCatchPhrase: string = "\"Join our community and unlock a world of possibilities! Create your account and start your journey with us.\""
 
-  user: UserAuthentification = {
-    email: '',
+  userSignUp: UserSignUp = {
+    username: '',
     password: '',
-    username: ''
+    email: '',
+    house: ''
+  }
+  userSignIn: UserSignIn = {
+    username: '',
+    password: ''
+  }
+  user: User = {
+    userInfo: {
+      username: '',
+      email: '',
+      hasHueAccount: false
+    },
+    token: ''
   }
 
+
   signIn() {
-    this.service.signIn(this.user)
-      .then( res => {
-        console.log(res)
-      }
-    )
+    this.service.signIn(this.userSignIn)
+      .then(res => {
+        this.user = res
+        this.saveUser()
+      })
+      .catch(error => {
+          this.errorMessage = error.message.startsWith("Error:") ?
+            error.message.slice("Error:".length).trim()
+            : error.message;
+        }
+      )
   }
 
   signUp() {
-    this.service.signUp(this.user)
-      .then( res => {
+    this.service.signUp(this.userSignUp)
+      .then(res => {
         this.user = res
-        console.log(this.user)
-      }
-    )
+        this.saveUser()
+      })
+      .catch(error => {
+          this.errorMessage = error.message.startsWith("Error:") ?
+            error.message.slice("Error:".length).trim()
+            : error.message;
+        }
+      )
+  }
+
+  private saveUser() {
+    console.log(this.user)
+    localStorage.setItem('user', JSON.stringify(this.user))
+  }
+
+  logout() {
+    this.service.logOut()
   }
 }

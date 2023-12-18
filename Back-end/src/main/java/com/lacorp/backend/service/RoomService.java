@@ -6,6 +6,7 @@ import com.lacorp.backend.model.House;
 import com.lacorp.backend.model.Light;
 import com.lacorp.backend.model.Room;
 import com.lacorp.backend.model.User;
+import com.lacorp.backend.repository.HouseRepository;
 import com.lacorp.backend.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 
 @Service
 public class RoomService {
+    @Autowired
+    private HouseRepository houseRepository;
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
@@ -46,6 +49,7 @@ public class RoomService {
             return null;
         }
     }
+
     public void turnOnAllLights(Room room, User user) {
         room.getLights().forEach(light -> {
             try {
@@ -84,9 +88,10 @@ public class RoomService {
     }
 
     public List<Room> saveRoomsWithHueAccount(Integer houseId, User user) throws JsonProcessingException {
-        House house = user.getHouses().get(houseId);
+        House house = houseRepository.findById(houseId).get();
 
         JsonNode rooms = hueService.getRooms(user);
+
         rooms.forEach(room -> {
             String name = room.get("name").asText();
             String type = room.get("type").asText();

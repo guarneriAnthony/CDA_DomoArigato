@@ -30,7 +30,11 @@ public class HouseService {
     }
 
     public House findById(Integer id) {
-        return houseRepository.findById(id).get();
+        if (houseRepository.findById(id).isPresent()) {
+            return houseRepository.findById(id).get();
+        } else {
+            return null;
+        }
     }
 
      public House updateHouseName(Integer id, String name) {

@@ -1,5 +1,6 @@
 <main class="container">
-
+  <p><a class="text-white" (click)="logout()">logout</a></p>
+  <p><a class="text-white" [routerLink]="['/auth']">auth</a></p>
   <div class="d-flex justify-content-center align-items-center vh-100">
 
     <div class="card-group h-75">
@@ -20,19 +21,21 @@
               <div class="mb-4 position-relative">
                 <label class="form-label" for="LogUsername">Username / Email</label>
                 <input
-                  [(ngModel)]="user.username"
+                  [(ngModel)]="userSignIn.username"
                   class="form-control"
                   id="LogUsername"
                   name="username"
                   required
                   type="text"
                 />
+                <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{errorMessage}}</p>
+
               </div>
 
               <div class="mb-4 position-relative">
                 <label class="form-label" for="password">Password</label>
                 <input
-                  [(ngModel)]="user.password"
+                  [(ngModel)]="userSignIn.password"
                   class="form-control"
                   id="password"
                   name="password"
@@ -99,6 +102,8 @@
           <form #userSignUpForm="ngForm" (ngSubmit)="signUp()" class="h-100 justify-content-between d-flex flex-column"
                 novalidate>
             <p>{{signUpCatchPhrase}}</p>
+            <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{errorMessage}}</p>
+
 
             <div class="container">
 
@@ -108,7 +113,7 @@
                   #emailInput="ngModel"
                   (blur)="emailInput.control.markAsUntouched()"
                   (focus)="emailInput.control.markAsTouched()"
-                  [(ngModel)]="user.email"
+                  [(ngModel)]="userSignUp.email"
                   aria-describedby="emailHelp"
                   class="form-control"
                   id="RegistrationEmail"
@@ -130,7 +135,7 @@
                   #usernameInput="ngModel"
                   (blur)="usernameInput.control.markAsUntouched()"
                   (focus)="usernameInput.control.markAsTouched()"
-                  [(ngModel)]="user.username"
+                  [(ngModel)]="userSignUp.username"
                   class="form-control"
                   id="RegistrationUsername"
                   name="username"
@@ -152,7 +157,7 @@
                   #passwordInput="ngModel"
                   (blur)="passwordInput.control.markAsUntouched()"
                   (focus)="passwordInput.control.markAsTouched()"
-                  [(ngModel)]="user.password"
+                  [(ngModel)]="userSignUp.password"
                   class="form-control"
                   id="RegistrationPassword"
                   name="password"
@@ -195,7 +200,7 @@
                   (focus)="houseInput.control.markAsTouched()"
                   class="form-control"
                   id="RegistrationHouse"
-                  ngModel
+                  [(ngModel)]="userSignUp.house"
                   pattern="[a-zA-Z0-9]{3,}"
                   required
                   type="text"
