@@ -25,12 +25,12 @@ public class HueController {
     }
 
     @GetMapping("oauth/callback")
-    private void callback(@RequestParam("code") String code,@RequestParam("state") String state) throws IOException, UnauthorizedException {
-        User user =hueService.saveAccount(code, state);
+    private void callback(@RequestParam("code") String code, @RequestParam("state") String state) throws IOException, UnauthorizedException {
+        User user = hueService.saveAccount(code, state);
     }
 
     @DeleteMapping("oauth/delete_account")
-    public void delete(Authentication authentication){
+    public void delete(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         hueService.delete(user);
     }

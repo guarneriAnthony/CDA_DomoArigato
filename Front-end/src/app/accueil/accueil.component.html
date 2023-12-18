@@ -1,6 +1,5 @@
 <main class="container">
-  <p><a class="text-white" (click)="logout()">logout</a></p>
-  <p><a class="text-white" [routerLink]="['/auth']">auth</a></p>
+
   <div class="d-flex justify-content-center align-items-center vh-100">
 
     <div class="card-group h-75">
@@ -9,13 +8,13 @@
 
         <div class="card-header border-0 text-center text-white">
           <h5 class="card-title"><img alt="Logo DomoArigato" src="{{logoPath}}"></h5>
-          <h6 class="card-subtitle mb-2 fst-italic">{{catchPhrase}}</h6>
+          <h6 class="card-subtitle mb-2 fst-italic">{{ catchPhrase }}</h6>
         </div>
 
         <div class="card-body text-white ">
           <form #userSignInForm="ngForm" (ngSubmit)="signIn()" class="h-100 justify-content-between d-flex flex-column"
                 novalidate>
-            <p>{{signInCatchPhrase}}</p>
+            <p>{{ signInCatchPhrase }}</p>
             <div class="container">
 
               <div class="mb-4 position-relative">
@@ -28,7 +27,7 @@
                   required
                   type="text"
                 />
-                <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{errorMessage}}</p>
+                <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{ errorMessage }}</p>
 
               </div>
 
@@ -46,7 +45,7 @@
 
             </div>
 
-            <button [disabled]="!userSignInForm.valid" class="btn w-100" type="submit">Submit</button>
+            <button [disabled]="!userSignInForm.valid" class="btn w-100" type="submit" [routerLink]="['/auth']">Submit</button>
 
           </form>
 
@@ -95,14 +94,14 @@
 
         <div class="card-header border-0 text-center text-white">
           <h5 class="card-title"><img alt="Logo DomoArigato" src="{{logoPath}}"></h5>
-          <h6 class="card-subtitle mb-2 fst-italic">{{catchPhrase}}</h6>
+          <h6 class="card-subtitle mb-2 fst-italic">{{ catchPhrase }}</h6>
         </div>
 
         <div class="card-body text-white ">
           <form #userSignUpForm="ngForm" (ngSubmit)="signUp()" class="h-100 justify-content-between d-flex flex-column"
                 novalidate>
-            <p>{{signUpCatchPhrase}}</p>
-            <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{errorMessage}}</p>
+            <p>{{ signUpCatchPhrase }}</p>
+            <p *ngIf="errorMessage" class="alert alert-danger end-0 start-0" role="alert">{{ errorMessage }}</p>
 
 
             <div class="container">
@@ -198,9 +197,9 @@
                   #houseInput="ngModel"
                   (blur)="houseInput.control.markAsUntouched()"
                   (focus)="houseInput.control.markAsTouched()"
+                  [(ngModel)]="userSignUp.house"
                   class="form-control"
                   id="RegistrationHouse"
-                  [(ngModel)]="userSignUp.house"
                   pattern="[a-zA-Z0-9]{3,}"
                   required
                   type="text"
@@ -214,7 +213,7 @@
 
             </div>
 
-            <button [disabled]="!userSignUpForm.valid" class="btn w-100" type="submit">Submit</button>
+            <button [disabled]="!userSignUpForm.valid" class="btn w-100" type="submit" [routerLink]="['/auth']">Submit</button>
 
           </form>
 

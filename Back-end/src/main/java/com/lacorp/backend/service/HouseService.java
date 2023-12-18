@@ -37,12 +37,12 @@ public class HouseService {
         }
     }
 
-     public House updateHouseName(Integer id, String name) {
+    public House updateHouseName(Integer id, String name) {
         if (houseRepository.findById(id).isPresent()) {
             House house = houseRepository.findById(id).get();
             house.setName(name);
             return houseRepository.save(house);
-        }else {
+        } else {
             return null;
         }
     }
@@ -63,7 +63,7 @@ public class HouseService {
             });
             house.setAllOn(house.getRooms().stream().allMatch(Room::isAllOn));
             return houseRepository.save(house);
-        }else {
+        } else {
             return null;
         }
     }
@@ -76,7 +76,7 @@ public class HouseService {
             });
             house.setAllOn(house.getRooms().stream().allMatch(Room::isAllOn));
             return houseRepository.save(house);
-        }else {
+        } else {
             return null;
         }
     }
@@ -91,7 +91,7 @@ public class HouseService {
                 }
             });
             return houseRepository.save(house);
-        }else {
+        } else {
             return null;
         }
     }

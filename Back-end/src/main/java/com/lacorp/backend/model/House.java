@@ -26,17 +26,15 @@ public class House {
     private boolean anyOn = false;
     @Column
     private boolean favorite = false;
-
-    public void addRoom(Room room) {
-        rooms.add(room);
-    }
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Room> rooms;
+
+    public void addRoom(Room room) {
+        rooms.add(room);
+    }
 
 }

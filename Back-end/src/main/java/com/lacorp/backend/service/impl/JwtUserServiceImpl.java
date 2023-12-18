@@ -25,17 +25,16 @@ import java.util.List;
 @Service
 public class JwtUserServiceImpl implements JwtUserService {
 
-    @Value("${jwt.signing.key}")
-    private String signingKey;
     @Autowired
     AuthenticationConfiguration authenticationConfiguration;
+    @Value("${jwt.signing.key}")
+    private String signingKey;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
 
     @Override

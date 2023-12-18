@@ -44,9 +44,10 @@ public class User implements UserDetails {
         return hueAccount != null;
     }
 
-    public void addHouse(House house){
+    public void addHouse(House house) {
         houses.add(house);
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -81,7 +82,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 
 }

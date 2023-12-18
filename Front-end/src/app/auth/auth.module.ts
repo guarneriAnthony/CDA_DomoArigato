@@ -1,17 +1,20 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { AuthRoutingModule } from './auth-routing.module';
-import { DashboardComponent } from './dashboard.component';
+import {AuthRoutingModule} from './auth-routing.module';
+import {DashboardComponent} from './dashboard.component';
+import { HouseComponent } from './house/house.component';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    HouseComponent,
   ],
   imports: [
     CommonModule,
-    AuthRoutingModule
+    AuthRoutingModule,
   ]
 })
-export class AuthModule { }
+export class AuthModule {
+}

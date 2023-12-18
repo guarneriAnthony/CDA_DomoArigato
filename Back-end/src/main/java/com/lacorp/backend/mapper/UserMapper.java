@@ -1,7 +1,7 @@
 package com.lacorp.backend.mapper;
 
-import com.lacorp.backend.model.UserInfoOutputDTO;
 import com.lacorp.backend.model.User;
+import com.lacorp.backend.model.UserInfoOutputDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

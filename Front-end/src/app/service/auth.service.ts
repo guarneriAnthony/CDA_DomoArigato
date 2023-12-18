@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import axios from "axios";
 import {UserSignUp} from "../interface/user/userSignUp";
 import {UserSignIn} from "../interface/user/userSignIn";
@@ -9,9 +9,9 @@ import {User} from "../interface/user/user";
 })
 export class AuthService {
   private apiUrl = "http://localhost:8080"
-  constructor() { }
-  isLoggedIn = () : Boolean => {
-    const storedUser : User = JSON.parse(localStorage.getItem('user') || '{}');
+  constructor() {}
+  isLoggedIn = (): Boolean => {
+    const storedUser: User = JSON.parse(localStorage.getItem('user') || '{}');
     return !!storedUser.token;
   }
   signIn = async (userSignIn: UserSignIn) => {
@@ -54,7 +54,7 @@ export class AuthService {
       }
     }
   }
-  logOut= ()  => {
+  logOut = () => {
     localStorage.removeItem('user');
   }
 }

@@ -1,13 +1,21 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from "./dashboard.component";
+import {HouseComponent} from "./house/house.component";
 
 const routes: Routes = [
-  {path: '', component : DashboardComponent},
+  {path: 'dashboard', component: DashboardComponent},
+  {path: 'house', component: HouseComponent},
+
+
+
+  {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {
+
+}

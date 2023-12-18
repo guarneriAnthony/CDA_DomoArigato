@@ -19,12 +19,11 @@ import java.util.List;
 @RequestMapping()
 public class SecurityController {
 
+    private final UserMapper userMapper = UserMapper.INSTANCE;
     @Autowired
     private JwtUserServiceImpl userService;
     @Autowired
     private HouseService houseService;
-
-    private  final UserMapper userMapper = UserMapper.INSTANCE;
 
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO dto) throws AccountExistsException {
@@ -54,7 +53,7 @@ public class SecurityController {
     }
 
     @GetMapping
-    public ResponseEntity<List<House>> getUserHouses(Authentication authentication){
+    public ResponseEntity<List<House>> getUserHouses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(houseService.findByUser(user));
     }

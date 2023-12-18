@@ -44,14 +44,14 @@ public class LightService {
             Light light = lightRepository.findById(lightId).get();
             light.setName(name);
             return lightRepository.save(light);
-        }else {
+        } else {
             return null;
         }
     }
 
     public void TurnOn(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
-        switch (constructorName){
+        switch (constructorName) {
             case "Hue":
                 hueService.turnOnLight(light, user);
                 light.setOn(true);
@@ -62,7 +62,7 @@ public class LightService {
 
     public void turnOff(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
-        switch (constructorName){
+        switch (constructorName) {
             case "Hue":
                 hueService.turnOffLight(light, user);
                 light.setOn(false);

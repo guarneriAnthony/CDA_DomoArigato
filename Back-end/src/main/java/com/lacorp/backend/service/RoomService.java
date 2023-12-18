@@ -45,7 +45,7 @@ public class RoomService {
             Room room = roomRepository.findById(roomId).get();
             room.setName(name);
             return roomRepository.save(room);
-        }else {
+        } else {
             return null;
         }
     }
@@ -62,7 +62,7 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-    public void turnOffAllLights(Room room, User user){
+    public void turnOffAllLights(Room room, User user) {
         room.setAllOn(false);
         room.getLights().forEach(light -> {
             try {
@@ -76,14 +76,14 @@ public class RoomService {
 
     public void refreshRoomAnyOn(Room room) {
         room.getLights().forEach(light -> {
-            if (light.isOn()){
+            if (light.isOn()) {
                 room.setAnyOn(true);
             }
         });
         roomRepository.save(room);
     }
 
-    public void deleteRoom(Room room){
+    public void deleteRoom(Room room) {
         roomRepository.delete(room);
     }
 
@@ -120,7 +120,7 @@ public class RoomService {
     public Room getRoomById(Integer id) {
         if (roomRepository.findById(id).isPresent()) {
             return roomRepository.findById(id).get();
-        }else {
+        } else {
             return null;
         }
     }

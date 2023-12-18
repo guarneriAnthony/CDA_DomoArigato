@@ -177,7 +177,7 @@ public class HueService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             return objectMapper.readTree(response.getBody());
-        }else {
+        } else {
             throw new HttpStatusErrorException("Erreur lors de la récupération des groupes, statut : " + response.getStatusCodeValue());
         }
     }
@@ -196,7 +196,7 @@ public class HueService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             return objectMapper.readTree(response.getBody());
-        }else {
+        } else {
             throw new HttpStatusErrorException("Erreur lors de la récupération des groupes, statut : " + response.getStatusCodeValue());
         }
     }
@@ -217,7 +217,7 @@ public class HueService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             objectMapper.readTree(response.getBody());
-        }else {
+        } else {
             throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + response.getStatusCodeValue());
         }
     }
@@ -238,7 +238,7 @@ public class HueService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             objectMapper.readTree(response.getBody());
-        }else {
+        } else {
             throw new HttpStatusErrorException("Erreur lors de la pression du bouton, statut : " + response.getStatusCodeValue());
         }
     }
