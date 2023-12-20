@@ -1,0 +1,4 @@
+.form-check-input:checked {
+  background-size: contain, auto;
+  background: linear-gradient(90deg, #FFC266 0%, #FF644A 100%) no-repeat center;
+}

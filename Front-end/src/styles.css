@@ -14,6 +14,12 @@
 .bg-black {
   background-color: var(--dark) !important;
 }
+.bg-dark {
+  background-color: var(--grey) !important;
+}
+.bg-dark:active {
+  background: linear-gradient(90deg, #FFC266 , #FF644A 100%) !important;
+}
 
 .btn {
   background: linear-gradient(90deg, #FFC266 , #FF644A 100%) !important;
@@ -21,7 +27,8 @@
 
 
 body {
-  background: linear-gradient(180deg, #FFF 0%, #FF644A 100%);
+  background: linear-gradient(180deg, #FFF 0%, #FF644A 100%), fixed;
   height: 100vh;
   width: 100vw;
+
 }

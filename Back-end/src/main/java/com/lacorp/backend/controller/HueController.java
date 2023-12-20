@@ -3,7 +3,6 @@ package com.lacorp.backend.controller;
 import com.lacorp.backend.execption.UnauthorizedException;
 import com.lacorp.backend.model.User;
 import com.lacorp.backend.service.HueService;
-import com.lacorp.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,6 @@ public class HueController {
 
     @Autowired
     private HueService hueService;
-    @Autowired
-    private RoomService roomService;
 
     @GetMapping("oauth/redirect")
     public String generateLink(Authentication authentication) {

@@ -1,0 +1,9 @@
+<header>
+  <p>dashboard works!</p>
+  <p><a (click)="logout()" [routerLink]="['/']">logOut</a></p>
+  <p><a [routerLink]="['house']">House</a></p>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

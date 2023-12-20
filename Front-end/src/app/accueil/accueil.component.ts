@@ -15,7 +15,7 @@ import {User} from "../interface/user/user";
   styleUrl: './accueil.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class AccueilComponent implements OnInit {
+export class AccueilComponent implements OnInit    {
   sign: boolean = true;
   errorMessage: string = ''
   logoPath: String = "../../assets/logo.png";
@@ -82,5 +82,6 @@ export class AccueilComponent implements OnInit {
   }
   private saveUser() {
     localStorage.setItem('user', JSON.stringify(this.user))
+
   }
 }

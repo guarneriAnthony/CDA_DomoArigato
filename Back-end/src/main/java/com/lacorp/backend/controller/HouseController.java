@@ -1,6 +1,7 @@
 package com.lacorp.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lacorp.backend.mapper.HouseMapper;
 import com.lacorp.backend.model.*;
 import com.lacorp.backend.service.HouseService;
 import com.lacorp.backend.service.LightService;
@@ -15,6 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/house")
 public class HouseController {
+    private final HouseMapper houseMapper = HouseMapper.INSTANCE;
+
     @Autowired
     private HouseService houseService;
     @Autowired
@@ -23,43 +26,46 @@ public class HouseController {
     private LightService lightService;
 
     @PostMapping
-    public ResponseEntity<List<House>> saveHouse(Authentication authentication, @RequestBody HouseInputDTO house) {
+    public ResponseEntity<List<HouseOutputDTO>> saveHouse(Authentication authentication, @RequestBody HouseInputDTO house) {
         User user = (User) authentication.getPrincipal();
         user.addHouse(houseService.save(user, house.name()));
-        return ResponseEntity.ok(user.getHouses());
+
+        return ResponseEntity.ok(houseMapper.housesToHouseOutputDTOs(user.getHouses()));
     }
 
     @GetMapping("/{house_id}")
-    public ResponseEntity<House> findHouseById(@PathVariable Integer house_id) {
-        return ResponseEntity.ok(houseService.findById(house_id));
+    public ResponseEntity<HouseOutputDTO> findHouseById(@PathVariable Integer house_id) {
+        return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.findById(house_id)));
     }
 
     @PutMapping("/{house_id}")
-    public ResponseEntity<House> updateHouseName(@PathVariable Integer house_id, @RequestBody HouseInputDTO house) {
-        return ResponseEntity.ok(houseService.updateHouseName(house_id, house.name()));
+    public ResponseEntity<HouseOutputDTO> updateHouseName(@PathVariable Integer house_id, @RequestBody HouseInputDTO house) {
+        return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.updateHouseName(house_id, house.name())));
     }
 
     @PutMapping("/{house_id}/favorite")
-    public ResponseEntity<List<House>> updateHouseFavorite(@PathVariable Integer house_id, Authentication authentication) {
+    public ResponseEntity<List<HouseOutputDTO>> updateHouseFavorite(@PathVariable Integer house_id, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(houseService.updateHouseFavorite(house_id, user));
+        return ResponseEntity.ok(houseMapper.housesToHouseOutputDTOs(houseService.updateHouseFavorite(house_id, user)));
     }
 
     @PutMapping("/{house_id}/turn_on")
-    public ResponseEntity<House> updateHouseTurnedAllOn(@PathVariable Integer house_id, Authentication authentication) {
+    public ResponseEntity<HouseOutputDTO> updateHouseTurnedAllOn(@PathVariable Integer house_id, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(houseService.turnOnAllLightsInHouse(house_id, user));
+        System.out.println("lala");
+        return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.turnOnAllLightsInHouse(house_id, user)));
     }
 
     @PutMapping("/{house_id}/turn_off")
-    public ResponseEntity<House> updateHouseTurnedAllOff(@PathVariable Integer house_id, Authentication authentication) {
+    public ResponseEntity<HouseOutputDTO> updateHouseTurnedAllOff(@PathVariable Integer house_id, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(houseService.turnOffAllLightsInHouse(house_id, user));
+        System.out.println("lele");
+        return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.turnOffAllLightsInHouse(house_id, user)));
     }
 
     @PutMapping("/{house_id}/refresh/any_on")
-    public ResponseEntity<House> updateHouseTurnedAnyOn(@PathVariable Integer house_id) {
-        return ResponseEntity.ok(houseService.refreshHouseAnyOn(house_id));
+    public ResponseEntity<HouseOutputDTO> updateHouseTurnedAnyOn(@PathVariable Integer house_id) {
+        return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.refreshHouseAnyOn(house_id)));
     }
 
     @DeleteMapping("/{house_id}")

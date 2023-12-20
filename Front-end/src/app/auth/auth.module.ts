@@ -1,20 +1,24 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 import {AuthRoutingModule} from './auth-routing.module';
-import {DashboardComponent} from './dashboard.component';
+import {AuthComponent} from './auth.component';
 import { HouseComponent } from './house/house.component';
+import {CardComponent} from "./card/card.component";
 
 
 @NgModule({
   declarations: [
-    DashboardComponent,
+    AuthComponent,
     HouseComponent,
+    CardComponent,
   ],
   imports: [
     CommonModule,
     AuthRoutingModule,
-  ]
+    NgOptimizedImage,
+  ],
+  bootstrap: [AuthComponent]
 })
 export class AuthModule {
 }

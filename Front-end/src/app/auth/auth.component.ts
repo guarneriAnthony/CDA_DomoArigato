@@ -3,10 +3,10 @@ import {AuthService} from "../service/auth.service";
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.css'
 })
-export class DashboardComponent {
+export class AuthComponent {
   constructor(private service: AuthService) {
   }
 
