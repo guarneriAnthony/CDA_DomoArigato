@@ -54,6 +54,27 @@ export class AuthService {
       }
     }
   }
+
+  redirectToOAuth = async () => {
+      try {
+        const storedUserJson = localStorage.getItem('user');
+        if (!storedUserJson) {
+          throw new Error('User not found in local storage');
+        }
+        const user: User = JSON.parse(storedUserJson);
+        const token = user.token;
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
+
+        const response = await axios.get(this.apiUrl + "/hue/oauth/redirect", { headers });
+        window.location.href = response.data;
+      } catch (error: any) {
+        console.error('Error during OAuth redirection:', error);
+        throw new Error('An error occurred during the OAuth redirection attempt: ' + error.message);
+      }
+    }
+
   logOut = () => {
     localStorage.removeItem('user');
   }
