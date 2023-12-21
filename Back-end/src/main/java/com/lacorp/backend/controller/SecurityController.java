@@ -52,6 +52,13 @@ public class SecurityController {
         }
     }
 
+    @GetMapping("/refresh")
+    public ResponseEntity<UserOutputDTO> refresh(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        String token = userService.generateJwtForUser(user);
+        return ResponseEntity.ok(new UserOutputDTO(userMapper.userToUserInfoOutputDTO(user), token));
+    }
+
     @GetMapping
     public ResponseEntity<List<House>> getUserHouses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();

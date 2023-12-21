@@ -20,6 +20,7 @@ export class CookieManagerService {
       domain: 'localhost',
       sameSite: 'Strict'
     });
+
     this.cookieService.set('authToken', user.token, {
       expires: expirationDate,
       path: '/',
@@ -37,8 +38,30 @@ export class CookieManagerService {
   }
 
   getToken = (): string => {
-    // si mon cookies est bientôt expiré ( moins de une heure ) j'appel "this.authService.refreshToken();" pour rafraichir le token
+    let token = this.cookieService.get('authToken');
+    if (this.lessOneHourLeft(token)){
+      this.authService.refreshToken(token).then(user => {
+        this.logIn(user)
+        token = this.cookieService.get('authToken');
+      })
+    }
+    return token
+  }
 
-    return this.cookieService.get('authToken');
+  getUser = (): User => {
+    const user = this.cookieService.get('user');
+    return JSON.parse(user||'{}')
+  }
+
+  lessOneHourLeft = (token: string): Boolean => {
+    const tokenPayload = JSON.parse(atob(token.split('.')[1]))
+
+    const expirationDate = new Date(tokenPayload.exp * 1000)
+
+    const currentDate = new Date()
+    const timeDifference = expirationDate.getTime() - currentDate.getTime()
+    const remainingTime = timeDifference / (1000 * 60 * 60)
+
+    return remainingTime < 1;
   }
 }

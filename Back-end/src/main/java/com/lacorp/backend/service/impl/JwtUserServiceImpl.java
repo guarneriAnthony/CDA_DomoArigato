@@ -57,7 +57,6 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public Authentication authenticate(String username, String password) throws Exception {
-        System.out.println("authentication = ");
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationConfiguration
                 .getAuthenticationManager()

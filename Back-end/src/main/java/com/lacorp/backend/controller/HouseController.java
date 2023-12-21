@@ -52,14 +52,12 @@ public class HouseController {
     @PutMapping("/{house_id}/turn_on")
     public ResponseEntity<HouseOutputDTO> updateHouseTurnedAllOn(@PathVariable Integer house_id, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        System.out.println("lala");
         return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.turnOnAllLightsInHouse(house_id, user)));
     }
 
     @PutMapping("/{house_id}/turn_off")
     public ResponseEntity<HouseOutputDTO> updateHouseTurnedAllOff(@PathVariable Integer house_id, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        System.out.println("lele");
         return ResponseEntity.ok(houseMapper.houseToHouseOutputDTO(houseService.turnOffAllLightsInHouse(house_id, user)));
     }
 

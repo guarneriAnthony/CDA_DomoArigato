@@ -6,6 +6,7 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {AuthService} from "../service/auth.service";
 import {UserSignIn} from "../interface/user/userSignIn";
 import {User} from "../interface/user/user";
+import {CookieManagerService} from "../service/cookie-manager.service";
 
 @Component({
   selector: 'app-accueil',
@@ -40,19 +41,20 @@ export class AccueilComponent implements OnInit    {
     },
     token: ''
   }
-  constructor(private route: ActivatedRoute, private service: AuthService, private router: Router) {
+  constructor(private router: Router, private route: ActivatedRoute, private service: AuthService, private cookieService: CookieManagerService) {
   }
+
   ngOnInit() {
-    if (this.service.isLoggedIn()) {
+    if (this.cookieService.isLogged()) {
       this.router.navigate(['/auth'])
     }
     this.sign = this.route.snapshot.url[0].path === "sign-in";
   }
+
   signIn() {
     this.service.signIn(this.userSignIn)
       .then(res => {
-        this.user = res
-        this.saveUser()
+        this.cookieService.logIn(res)
         this.router.navigate(['/auth'])
       })
       .catch(error => {
@@ -65,10 +67,8 @@ export class AccueilComponent implements OnInit    {
   signUp() {
     this.service.signUp(this.userSignUp)
       .then(res => {
-        this.user = res
-        this.saveUser()
+        this.cookieService.logIn(res)
         this.router.navigate(['/auth'])
-
       })
       .catch(error => {
           this.errorMessage = error.message.startsWith("Error:") ?
@@ -76,12 +76,5 @@ export class AccueilComponent implements OnInit    {
             : error.message;
         }
       )
-  }
-  logout() {
-    this.service.logOut()
-  }
-  private saveUser() {
-    localStorage.setItem('user', JSON.stringify(this.user))
-
   }
 }

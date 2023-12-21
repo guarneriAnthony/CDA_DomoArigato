@@ -1,36 +1,20 @@
 import {Injectable} from '@angular/core';
-import axios from "axios";
-import {User} from "../interface/user/user";
+import {createAxiosInstance} from "./axios.interceptor";
 import {House} from "../interface/house";
+import {CookieManagerService} from "./cookie-manager.service";
 @Injectable({
   providedIn: 'root'
 })
 export class HouseService {
 
-  private instance = axios.create({
-    baseURL: 'http://localhost:8080',
-  });
-
-  constructor() {
-    this.setupInterceptors()
-  }
-
-  private setupInterceptors(): void {
-    this.instance.interceptors.request.use((config) => {
-      const storedUser: User = JSON.parse(localStorage.getItem('user') || '{}');
-
-      if (storedUser && storedUser.token) {
-        config.headers.Authorization = `Bearer ${storedUser.token}`;
-      }
-      return config;
-    }, (error) => {
-      return Promise.reject(error);
-    });
+  private axiosInstance;
+  constructor(private cookieManagerService: CookieManagerService) {
+    this.axiosInstance = createAxiosInstance(cookieManagerService)
   }
 
   getHouses = async () => {
     try {
-      const response = await this.instance.get('');
+      const response = await this.axiosInstance.get('');
       const houses: House[] = response.data.map((house: House) => {
 
         return {
@@ -55,7 +39,7 @@ export class HouseService {
   switchOn = async (houseId: number, on: boolean) => {
     try {
       let state = on ? 'on' : 'off'
-      const response = await this.instance.put(`/house/${houseId}/turn_${state}`);
+      const response = await this.axiosInstance.put(`/house/${houseId}/turn_${state}`);
       return response.data
     } catch (error: any) {
       if (error.response && error.response.status === 401) {

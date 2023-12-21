@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {AuthService} from "../service/auth.service";
+import {CookieService} from "ngx-cookie-service";
+import {CookieManagerService} from "../service/cookie-manager.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -7,10 +9,10 @@ import {AuthService} from "../service/auth.service";
   styleUrl: './auth.component.css'
 })
 export class AuthComponent {
-  constructor(private service: AuthService) {
+  constructor(private cookies: CookieManagerService) {
   }
 
   logout() {
-    this.service.logOut()
+    this.cookies.logOut()
   }
 }
