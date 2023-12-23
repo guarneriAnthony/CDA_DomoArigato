@@ -34,7 +34,6 @@ export class CardComponent implements OnInit{
         break;
       }
       case 'room': {
-        console.log("lala")
         this.router.navigate(['auth','house', 'room', this.object?.id, 'lights']);
         break;
       }

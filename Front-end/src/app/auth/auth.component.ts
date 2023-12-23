@@ -9,10 +9,10 @@ import {CookieManagerService} from "../service/cookie-manager.service";
   styleUrl: './auth.component.css'
 })
 export class AuthComponent {
-  constructor(private cookies: CookieManagerService) {
+isMenuCollapsed = true;
+  constructor(private cookies: CookieManagerService, private service: AuthService) {
   }
-
-  logout() {
+    logout() {
     this.cookies.logOut()
   }
 }

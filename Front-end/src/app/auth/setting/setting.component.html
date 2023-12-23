@@ -1,0 +1,125 @@
+
+<h2 *ngIf="user" class="card-title text-center">Welcome in the Settings {{user.userInfo.username}}</h2>
+
+
+
+<div class="container mt-4 ">
+  <div class="accordion " id="settingsAccordion">
+    <!-- Profile Settings Card -->
+    <div class="card" *ngFor="let house of houses">
+      <div class="card-header d-flex justify-content-between align-items-center" id="headingProfile">
+        <h2 class="mb-0" *ngIf="houses">
+          {{house.name}}
+        </h2>
+        <button class="btn btn-link"  type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="true" aria-controls="collapseProfile">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.793l5.646-6.147a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </button>
+      </div>
+      <div id="collapseProfile" class="collapse" aria-labelledby="headingProfile" data-bs-parent="#settingsAccordion">
+        <div class="card-body">
+
+
+          <div class="card">
+            <div class="card-header text-white">
+              <div class="d-flex justify-content-center align-items-center">
+                <span class="">Bridges Info</span>
+              </div>
+            </div>
+            <ul class="aaa list-group list-group-flush">
+              <li class="list-group-item" *ngIf="user?.userInfo?.hasHueAccount === true">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-0">Phillips hue</h6>
+                    <small> Status: <span class="text-span-yellow">Connected</span></small><br>
+                  </div>
+                  <div>
+                    <a><span class="text-span-orange">Disconnected</span></a>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item"><!-- *ngIf="user?.userInfo?.hasXiaomiAccount === true" -->
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-0">Xiaomi</h6>
+                    <small> Status: <span class="text-span-orange">disconnected</span></small><br>
+                  </div>
+                  <div>
+                    <a class="text-span-yellow">Connect</a>
+                  </div>
+                </div>
+              </li>
+
+            </ul>
+            <div class="card-footer text-center">
+              <a class="text-black" [routerLink]="['/auth/brand']">
+                Add new
+              </a>
+            </div>
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center" id="headingLampInfo">
+        <h2 class="mb-0">
+          Lamp Information
+        </h2>
+        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLampInfo" aria-expanded="false" aria-controls="collapseLampInfo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.793l5.646-6.147a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </button>
+      </div>
+      <div id="collapseLampInfo" class="collapse" aria-labelledby="headingLampInfo" data-bs-parent="#accordionExample">
+        <div class="card-body">
+          <!-- Lamp information content -->
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="container mt-4 ">
+      <div class="accordion" id="settingsAccordion2">
+        <!-- Profile Settings Card -->
+        <div class="card text-black" *ngFor="let house of houses">
+          <div class="card-header d-flex justify-content-between align-items-center" id="headingProfile2">
+            <h2 class="mb-0" *ngIf="houses">
+              {{ house.name }}
+            </h2>
+            <button class="btn btn-link" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseProfile' + house.id" aria-expanded="true" [attr.aria-controls]="'collapseProfile' + house.id">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.793l5.646-6.147a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </div>
+          <div [id]="'collapseProfile' + house.id" class="collapse" [attr.aria-labelledby]="'headingProfile' + house.id" data-bs-parent="#settingsAccordion">
+            <div class="card-body">
+              <div *ngFor="let room of rooms.get(house.id)">
+                <h3>Room Name: {{ room.name }}</h3>
+                <div class="card" *ngFor="let light of lights.get(room.id)">
+                  <div class="card-body text-black">
+                    <h5 class="card-title">Light Name: {{ light.name }}</h5>
+                    <p class="card-text">Light type: {{ light.type }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+

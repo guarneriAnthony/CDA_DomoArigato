@@ -13,9 +13,9 @@ export class RoomService {
     this.axiosInstance = createAxiosInstance(cookieManagerService)
   }
 
-  getRooms = async () => {
+  getRooms = async (houseId: number) => {
     try {
-      const response = await this.axiosInstance.get('house/6/rooms')
+      const response = await this.axiosInstance.get(`house/${houseId}/rooms`);
       const rooms: Room[] = response.data.map((room: Room) => {
 
         return {

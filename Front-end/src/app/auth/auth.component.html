@@ -1,12 +1,26 @@
 <header>
-  <p>dashboard works!</p>
-  <p><a (click)="logout()" [routerLink]="['/']">logOut</a></p>
-  <p><a [routerLink]="['houses']">House</a></p>
-  <p><a [routerLink]="['house', 6]">Room</a></p>
-  <p><a [routerLink]="['light']">Light</a></p>
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <a class="navbar-brand" href="#">
+      <img src="../../assets/logo.png" alt="Logo" style="height: 50px;">
+    </a>
+    <p>DomoArigato</p>
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed"
+            [attr.aria-expanded]="!isMenuCollapsed" aria-controls="navbarNavAltMarkup" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse" [class.collapse]="isMenuCollapsed" id="navbarNavAltMarkup">
+      <div class="navbar-nav mx-auto">
+        <a class="nav-item nav-link" href="#">Home</a>
+        <a class="nav-item nav-link active"  [routerLink]="['houses']" href="#">Houses</a>
+      </div>
+      <div class="navbar-nav ml-md-auto">
+        <a class="nav-item nav-link" [routerLink]="['setting']" href="#">Setting</a>
+        <a class="nav-item nav-link" (click)="logout()" [routerLink]="['/']">Log Out</a>
+      </div>
+    </div>
+  </nav>
 </header>
 
 <main>
   <router-outlet></router-outlet>
 </main>
-w

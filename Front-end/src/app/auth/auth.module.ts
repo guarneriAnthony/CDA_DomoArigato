@@ -7,6 +7,8 @@ import { HouseComponent } from './house/house.component';
 import {CardComponent} from "./card/card.component";
 import { RoomComponent } from './room/room.component';
 import { LightComponent } from './light/light.component';
+import { SettingComponent } from './setting/setting.component';
+import { BrandComponent } from './brand/brand.component';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { LightComponent } from './light/light.component';
     CardComponent,
     RoomComponent,
     LightComponent,
+    SettingComponent,
+    BrandComponent,
   ],
   imports: [
     CommonModule,

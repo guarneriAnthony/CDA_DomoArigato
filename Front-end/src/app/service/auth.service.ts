@@ -72,4 +72,8 @@ export class AuthService {
       throw new Error('An error occurred during the login attempt: ' + error.message);
     }
   }
+
+
+
+
 }

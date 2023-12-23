@@ -4,6 +4,8 @@ import {AuthComponent} from "./auth.component";
 import {HouseComponent} from "./house/house.component";
 import {RoomComponent} from "./room/room.component";
 import {LightComponent} from "./light/light.component";
+import {SettingComponent} from './setting/setting.component';
+import {BrandComponent} from "./brand/brand.component";
 
 const routes: Routes = [
   {path: '', component: AuthComponent,
@@ -11,6 +13,8 @@ const routes: Routes = [
       {path: 'houses', component: HouseComponent},
       {path: 'house/:houseId/rooms', component: RoomComponent},
       {path: 'house/room/:roomId/lights', component: LightComponent},
+      { path: 'brand', component: BrandComponent },
+      {path: 'setting', component: SettingComponent },
     ]},
 
 ];

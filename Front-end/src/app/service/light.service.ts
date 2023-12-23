@@ -13,9 +13,9 @@ export class LightService {
     this.axiosInstance = createAxiosInstance(cookieManagerService)
   }
 
-  getLights = async () => {
+  getLights = async (roomId: number) => {
     try {
-      const response = await this.axiosInstance.get('/house/room/14/lights');
+      const response = await this.axiosInstance.get(`/house/room/${roomId}/lights`);
       const lights: Light[] = response.data.map((light: Light) => {
 
         return {

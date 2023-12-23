@@ -1,0 +1,29 @@
+.card {
+color: white;
+border-radius: 25px;
+}
+
+
+.card-footer {
+  border-radius: 0px 0px 25px 25px;
+  background: var(--Color-claire-logo, #FFC266);
+  text-decoration: none;
+}
+
+.text-span-yellow{
+  color: #FFC266
+}
+.text-span-orange{
+  color: #FF644A
+}
+
+.card-header{
+border-radius: 25px 25px 0px 0px;
+background: #2F3135;
+}
+
+
+.list-group-item{
+background: linear-gradient(180deg, rgba(47, 49, 53, 0.75) 0%, #2F3135 100%);
+color: white;
+}
