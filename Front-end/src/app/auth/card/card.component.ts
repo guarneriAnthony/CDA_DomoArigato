@@ -5,6 +5,7 @@ import { Light } from '../../interface/light';
 import {HouseService} from "../../service/house.service";
 import {RoomService} from "../../service/room.service";
 import {LightService} from "../../service/light.service";
+import {Router} from "@angular/router";
 
 type ObjectPerso = House | Room | Light;
 type Service = HouseService | RoomService | LightService;
@@ -16,12 +17,28 @@ type Service = HouseService | RoomService | LightService;
 })
 export class CardComponent implements OnInit{
 
+  constructor(private router : Router) {
+  }
   @Input() object: ObjectPerso | null = null;
   @Input() service: Service | null = null;
 
   on : boolean = false;
   ngOnInit(): void {
+  }
 
+  redirect = (event: Event) => {
+    event.stopPropagation();
+    switch (this.object?.type) {
+      case 'house': {
+        this.router.navigate(['auth','house', this.object?.id, 'rooms'])
+        break;
+      }
+      case 'room': {
+        console.log("lala")
+        this.router.navigate(['auth','house', 'room', this.object?.id, 'lights']);
+        break;
+      }
+    }
   }
 
   switchLight = (event: Event) => {
@@ -29,10 +46,6 @@ export class CardComponent implements OnInit{
     this.on = !this.on
     // @ts-ignore
     this.service?.switchOn(this.object?.id, this.on)
-  }
-
-  test(message: string, event: Event): void {
-    event.stopPropagation();
   }
 
   stopPropagation(event: Event): void {

@@ -28,6 +28,7 @@ public class LightService {
     }
 
     public List<Light> findByRoom(Room room) {
+        System.out.println(lightRepository.findByRoom(room));
         return lightRepository.findByRoom(room);
     }
 
@@ -49,26 +50,28 @@ public class LightService {
         }
     }
 
-    public void TurnOn(Light light, User user) throws JsonProcessingException {
+    public Light turnOn(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
         switch (constructorName) {
             case "Hue":
                 hueService.turnOnLight(light, user);
                 light.setOn(true);
-                lightRepository.save(light);
+                return lightRepository.save(light);
             default:
         }
+        return null;
     }
 
-    public void turnOff(Light light, User user) throws JsonProcessingException {
+    public Light turnOff(Light light, User user) throws JsonProcessingException {
         String constructorName = light.getConstructor_name();
         switch (constructorName) {
             case "Hue":
                 hueService.turnOffLight(light, user);
                 light.setOn(false);
-                lightRepository.save(light);
+                return lightRepository.save(light);
             default:
         }
+        return null;
     }
 
     public Light saveHue(String lightId, User user, Room room) throws JsonProcessingException {

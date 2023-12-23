@@ -6,12 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class HouseOutputDTO {
+public class RoomOutputDTO {
 
     private Integer id;
     private String name;
     private boolean allOn;
     private boolean anyOn;
-    private boolean favorite;
 
 }

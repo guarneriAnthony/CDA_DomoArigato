@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class RoomOutputDTO {
-
+public class LightOutputDTO {
     private Integer id;
     private String name;
-    private boolean allOn;
-    private boolean anyOn;
+    private String constructor_name;
+    private boolean isOn;
 
 }

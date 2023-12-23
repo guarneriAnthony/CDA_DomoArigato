@@ -1,3 +1,6 @@
-<div *ngFor="let house of houses" class="container">
-  <app-card [object]="house" [service]="service"></app-card>
+<div *ngFor="let house of houses">
+  <app-card
+    [object]="house"
+    [service]="service"
+  ></app-card>
 </div>

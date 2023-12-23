@@ -11,5 +11,6 @@ public class UserInfoOutputDTO {
     String username;
     String email;
     Boolean hasHueAccount;
-    List<House> houses;
+    Boolean hasGoveeAccount;
+    List<UserInfoHouseOutputDTO> houses;
 }

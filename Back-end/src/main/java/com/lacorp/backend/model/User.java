@@ -43,6 +43,9 @@ public class User implements UserDetails {
     public boolean hasHueAccount() {
         return hueAccount != null;
     }
+    public boolean hasGoveeAccount() {
+        return goveeAccount != null;
+    }
 
     public void addHouse(House house) {
         houses.add(house);

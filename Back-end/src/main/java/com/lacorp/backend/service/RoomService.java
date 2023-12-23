@@ -50,19 +50,19 @@ public class RoomService {
         }
     }
 
-    public void turnOnAllLights(Room room, User user) {
+    public Room turnOnAllLights(Room room, User user) {
         room.getLights().forEach(light -> {
             try {
-                lightService.TurnOn(light, user);
+                lightService.turnOn(light, user);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         });
         room.setAllOn(room.getLights().stream().allMatch(Light::isOn));
-        roomRepository.save(room);
+        return roomRepository.save(room);
     }
 
-    public void turnOffAllLights(Room room, User user) {
+    public Room turnOffAllLights(Room room, User user) {
         room.setAllOn(false);
         room.getLights().forEach(light -> {
             try {
@@ -71,7 +71,7 @@ public class RoomService {
                 throw new RuntimeException(e);
             }
         });
-        roomRepository.save(room);
+        return roomRepository.save(room);
     }
 
     public void refreshRoomAnyOn(Room room) {

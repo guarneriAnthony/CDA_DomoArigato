@@ -28,11 +28,7 @@ export class HouseService {
       })
       return houses
     } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        throw new Error('Username, email, or password is incorrect. Please try again.');
-      } else {
-        throw new Error('An error occurred during the login attempt: ' + error.message);
-      }
+      throw error
     }
   }
 

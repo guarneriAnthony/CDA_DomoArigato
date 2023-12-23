@@ -4,5 +4,4 @@ export interface Room {
   name: string
   allOn: boolean
   anyOn: boolean
-  favorite: boolean
 }

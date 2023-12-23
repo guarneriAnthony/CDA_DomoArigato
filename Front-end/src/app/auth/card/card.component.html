@@ -1,24 +1,30 @@
-<div class="card bg-black text-white" (click)="test('carte', $event)">
-  <div class="card-header border-0 d-flex justify-content-between" >
-
-    <div class="gauche">
-      <img ngSrc="./assets/icons/{{object?.type}}.svg" alt="" class="d-inline me-3" height="50" width="50">
-      <p class="d-inline">{{ object?.name }}</p>
+<div class="container m-3">
+  <div class="card text-white"
+       [class.bg-black]="!on"
+       [class.bg-primary]="on"
+       (click)="redirect($event)"
+  >
+    <div class="card-body border-0 d-flex justify-content-between">
+      <div class="left">
+        <img ngSrc="./assets/icons/{{object?.type}}.svg" alt="" class="d-inline me-3" height="50" width="50">
+        <p class="d-inline">{{ object?.name }}</p>
+      </div>
+      <div class="right">
+        <img [src]="on ? './assets/icons/switches/on.svg' : './assets/icons/switches/off.svg'"
+             alt=""
+             height="25"
+             width="50"
+             (click)="switchLight($event)">
+      </div>
     </div>
-
-    <div>
-
-      <img [src]="on ? './assets/icons/switches/on.svg' : './assets/icons/switches/off.svg'" alt="" height="25" width="50" (click)="switchLight($event)">
+    <div class="card-body">
+      <input type="range"
+             class="form-range"
+             id="customRange1"
+             (click)="stopPropagation($event)"
+             (input)="updatePercentage($event)"
+             [style.visibility]="on ? 'visible' : 'hidden'"
+      >
     </div>
-
   </div>
-  <div class="card-body">
-    <input type="range"
-           class="form-range"
-           id="customRange1"
-           (click)="stopPropagation($event)"
-           (input)="updatePercentage($event)"
-    >
-  </div>
-
 </div>

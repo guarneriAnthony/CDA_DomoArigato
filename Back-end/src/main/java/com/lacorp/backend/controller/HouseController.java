@@ -2,6 +2,8 @@ package com.lacorp.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lacorp.backend.mapper.HouseMapper;
+import com.lacorp.backend.mapper.LightMapper;
+import com.lacorp.backend.mapper.RoomMapper;
 import com.lacorp.backend.model.*;
 import com.lacorp.backend.service.HouseService;
 import com.lacorp.backend.service.LightService;
@@ -17,6 +19,8 @@ import java.util.List;
 @RequestMapping("/house")
 public class HouseController {
     private final HouseMapper houseMapper = HouseMapper.INSTANCE;
+    private final RoomMapper roomMapper = RoomMapper.INSTANCE;
+    private final LightMapper lightMapper = LightMapper.INSTANCE;
 
     @Autowired
     private HouseService houseService;
@@ -29,7 +33,6 @@ public class HouseController {
     public ResponseEntity<List<HouseOutputDTO>> saveHouse(Authentication authentication, @RequestBody HouseInputDTO house) {
         User user = (User) authentication.getPrincipal();
         user.addHouse(houseService.save(user, house.name()));
-
         return ResponseEntity.ok(houseMapper.housesToHouseOutputDTOs(user.getHouses()));
     }
 
@@ -73,54 +76,80 @@ public class HouseController {
     }
 
     @PostMapping("/{house_id}/room")
-    public ResponseEntity<List<Room>> saveRoom(@PathVariable Integer house_id, @RequestBody RoomInputDTO room) {
+    public ResponseEntity<List<RoomOutputDTO>> saveRoom(@PathVariable Integer house_id, @RequestBody RoomInputDTO room) {
         House house = houseService.findById(house_id);
         house.addRoom(roomService.save(house, room.name()));
-        return ResponseEntity.ok(house.getRooms());
+        return ResponseEntity.ok(roomMapper.roomToRoomsOutputDTOs(house.getRooms()));
     }
 
     @GetMapping("/{house_id}/rooms")
-    public ResponseEntity<List<Room>> FindRoomsByHouse(@PathVariable Integer house_id) {
+    public ResponseEntity<List<RoomOutputDTO>> FindRoomsByHouse(@PathVariable Integer house_id) {
         House house = houseService.findById(house_id);
-        return ResponseEntity.ok(roomService.findByHouse(house));
+        return ResponseEntity.ok(roomMapper.roomToRoomsOutputDTOs(house.getRooms()));
     }
 
     @PutMapping("{house_id}/room/refresh")
-    public ResponseEntity<List<Room>> refreshHueRooms(@PathVariable Integer house_id, Authentication authentication) throws JsonProcessingException {
+    public ResponseEntity<List<RoomOutputDTO>> refreshHueRooms(@PathVariable Integer house_id, Authentication authentication) throws JsonProcessingException {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(roomService.saveRoomsWithHueAccount(house_id, user));
+        return ResponseEntity.ok(roomMapper.roomToRoomsOutputDTOs(roomService.saveRoomsWithHueAccount(house_id, user)));
     }
 
     @GetMapping("/room/{room_id}")
-    public ResponseEntity<Room> findRoomById(@PathVariable Integer room_id) {
-        return ResponseEntity.ok(roomService.findById(room_id));
+    public ResponseEntity<RoomOutputDTO> findRoomById(@PathVariable Integer room_id) {
+        return ResponseEntity.ok(roomMapper.roomToRoomOutputDTO(roomService.findById(room_id)));
     }
 
     @PutMapping("/room/{room_id}")
-    public ResponseEntity<Room> updateRoomName(@PathVariable Integer room_id, @RequestBody RoomInputDTO room) {
-        return ResponseEntity.ok(roomService.updateRoomName(room_id, room.name()));
+    public ResponseEntity<RoomOutputDTO> updateRoomName(@PathVariable Integer room_id, @RequestBody RoomInputDTO room) {
+        return ResponseEntity.ok(roomMapper.roomToRoomOutputDTO(roomService.updateRoomName(room_id, room.name())));
+    }
+    @PutMapping("/room/{room_id}/turn_on")
+    public ResponseEntity<RoomOutputDTO> updateRoomTurnedAllOn(@PathVariable Integer room_id, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Room room = roomService.findById(room_id);
+        return ResponseEntity.ok(roomMapper.roomToRoomOutputDTO(roomService.turnOnAllLights(room, user)));
     }
 
+    @PutMapping("/room/{room_id}/turn_off")
+    public ResponseEntity<RoomOutputDTO> updateRoomTurnedAllOff(@PathVariable Integer room_id, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Room room = roomService.findById(room_id);
+        return ResponseEntity.ok(roomMapper.roomToRoomOutputDTO(roomService.turnOffAllLights(room, user)));
+    }
     @PostMapping("/room/{room_id}/light")
-    public ResponseEntity<List<Light>> saveLight(@PathVariable Integer room_id, @RequestBody LightInputDTO light) {
+    public ResponseEntity<List<LightOutputDTO>> saveLight(@PathVariable Integer room_id, @RequestBody LightInputDTO light) {
         Room room = roomService.findById(room_id);
         room.addLight(lightService.save(room, light.name()));
-        return ResponseEntity.ok(room.getLights());
+        return ResponseEntity.ok(lightMapper.lightToLightsOutputDTOs(room.getLights()));
     }
 
     @GetMapping("/room/{room_id}/lights")
-    public ResponseEntity<List<Light>> findLightsByRoom(@PathVariable Integer room_id) {
+    public ResponseEntity<List<LightOutputDTO>> findLightsByRoom(@PathVariable Integer room_id) {
         Room room = roomService.findById(room_id);
-        return ResponseEntity.ok(lightService.findByRoom(room));
+        return ResponseEntity.ok(lightMapper.lightToLightsOutputDTOs(room.getLights()));
     }
 
     @GetMapping("/room/light/{light_id}")
-    public ResponseEntity<Light> findLightById(@PathVariable Integer light_id) {
-        return ResponseEntity.ok(lightService.findById(light_id));
+    public ResponseEntity<LightOutputDTO> findLightById(@PathVariable Integer light_id) {
+        return ResponseEntity.ok(lightMapper.lightToLightOutputDTO(lightService.findById(light_id)));
     }
 
     @PutMapping("/room/light/{light_id}")
-    public ResponseEntity<Light> updateLightName(@PathVariable Integer light_id, @RequestBody LightInputDTO light) {
-        return ResponseEntity.ok(lightService.updateLightName(light_id, light.name()));
+    public ResponseEntity<LightOutputDTO> updateLightName(@PathVariable Integer light_id, @RequestBody LightInputDTO light) {
+        return ResponseEntity.ok(lightMapper.lightToLightOutputDTO(lightService.updateLightName(light_id, light.name())));
+    }
+
+    @PutMapping("/room/light/{light_id}/turn_on")
+    public ResponseEntity<LightOutputDTO> updateLightTurnedOn(@PathVariable Integer light_id, Authentication authentication) throws JsonProcessingException {
+        User user = (User) authentication.getPrincipal();
+        Light light = lightService.findById(light_id);
+        return ResponseEntity.ok(lightMapper.lightToLightOutputDTO(lightService.turnOn(light, user)));
+    }
+
+    @PutMapping("/room/light/{light_id}/turn_off")
+    public ResponseEntity<LightOutputDTO> updateLightTurnedOff(@PathVariable Integer light_id, Authentication authentication) throws JsonProcessingException {
+        User user = (User) authentication.getPrincipal();
+        Light light = lightService.findById(light_id);
+        return ResponseEntity.ok(lightMapper.lightToLightOutputDTO(lightService.turnOff(light, user)));
     }
 }

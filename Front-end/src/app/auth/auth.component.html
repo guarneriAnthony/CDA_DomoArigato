@@ -1,9 +1,12 @@
 <header>
   <p>dashboard works!</p>
   <p><a (click)="logout()" [routerLink]="['/']">logOut</a></p>
-  <p><a [routerLink]="['house']">House</a></p>
+  <p><a [routerLink]="['houses']">House</a></p>
+  <p><a [routerLink]="['house', 6]">Room</a></p>
+  <p><a [routerLink]="['light']">Light</a></p>
 </header>
 
 <main>
   <router-outlet></router-outlet>
 </main>
+w

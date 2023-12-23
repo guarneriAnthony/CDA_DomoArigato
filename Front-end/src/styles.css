@@ -17,7 +17,7 @@
 .bg-dark {
   background-color: var(--grey) !important;
 }
-.bg-dark:active {
+.bg-primary {
   background: linear-gradient(90deg, #FFC266 , #FF644A 100%) !important;
 }
 

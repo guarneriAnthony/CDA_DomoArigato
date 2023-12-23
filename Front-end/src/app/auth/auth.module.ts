@@ -5,6 +5,8 @@ import {AuthRoutingModule} from './auth-routing.module';
 import {AuthComponent} from './auth.component';
 import { HouseComponent } from './house/house.component';
 import {CardComponent} from "./card/card.component";
+import { RoomComponent } from './room/room.component';
+import { LightComponent } from './light/light.component';
 
 
 @NgModule({
@@ -12,6 +14,8 @@ import {CardComponent} from "./card/card.component";
     AuthComponent,
     HouseComponent,
     CardComponent,
+    RoomComponent,
+    LightComponent,
   ],
   imports: [
     CommonModule,
