@@ -13,8 +13,9 @@ const routes: Routes = [
       {path: 'houses', component: HouseComponent},
       {path: 'house/:houseId/rooms', component: RoomComponent},
       {path: 'house/room/:roomId/lights', component: LightComponent},
-      { path: 'brand', component: BrandComponent },
+      {path: 'brand', component: BrandComponent },
       {path: 'setting', component: SettingComponent },
+      {path: '', redirectTo: 'houses', pathMatch: 'full'}
     ]},
 
 ];

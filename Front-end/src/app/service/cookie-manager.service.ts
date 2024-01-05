@@ -60,7 +60,7 @@ export class CookieManagerService {
 
     const currentDate = new Date()
     const timeDifference = expirationDate.getTime() - currentDate.getTime()
-    const remainingTime = timeDifference / (1000 * 60 * 60)
+    const remainingTime = timeDifference / (1000 * 60 )
 
     return remainingTime < 1;
   }

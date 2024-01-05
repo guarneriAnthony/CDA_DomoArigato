@@ -3,6 +3,7 @@ package com.lacorp.backend.controller;
 import com.lacorp.backend.execption.UnauthorizedException;
 import com.lacorp.backend.model.User;
 import com.lacorp.backend.service.HueService;
+import com.lacorp.backend.service.RoomService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,8 @@ public class HueController {
 
     @Autowired
     private HueService hueService;
+    @Autowired
+    private RoomService roomService;
 
     @GetMapping("oauth/redirect")
     public String generateLink(Authentication authentication) {
@@ -25,6 +28,7 @@ public class HueController {
     @GetMapping("oauth/callback")
     private void callback(@RequestParam("code") String code, @RequestParam("state") String state, HttpServletResponse response) throws IOException, UnauthorizedException {
         User user = hueService.saveAccount(code, state);
+        roomService.saveRoomsWithHueAccount(user.getHouses().get(0).getId(), user);
         response.sendRedirect("http://localhost:4200/auth/house");
     }
 

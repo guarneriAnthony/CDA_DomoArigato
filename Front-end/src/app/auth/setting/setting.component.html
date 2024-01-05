@@ -3,13 +3,13 @@
 
 
 
-<div class="container mt-4 ">
+<div class=" mt-4 ">
   <div class="accordion " id="settingsAccordion">
     <!-- Profile Settings Card -->
     <div class="card" *ngFor="let house of houses">
       <div class="card-header d-flex justify-content-between align-items-center" id="headingProfile">
         <h2 class="mb-0" *ngIf="houses">
-          {{house.name}}
+          {{house.name}} Brands
         </h2>
         <button class="btn btn-link"  type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="true" aria-controls="collapseProfile">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -57,44 +57,19 @@
                 Add new
               </a>
             </div>
-
-
           </div>
-
-
-
         </div>
       </div>
     </div>
+
 
     <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center" id="headingLampInfo">
-        <h2 class="mb-0">
-          Lamp Information
-        </h2>
-        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLampInfo" aria-expanded="false" aria-controls="collapseLampInfo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.793l5.646-6.147a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-          </svg>
-        </button>
-      </div>
-      <div id="collapseLampInfo" class="collapse" aria-labelledby="headingLampInfo" data-bs-parent="#accordionExample">
-        <div class="card-body">
-          <!-- Lamp information content -->
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="container mt-4 ">
       <div class="accordion" id="settingsAccordion2">
         <!-- Profile Settings Card -->
-        <div class="card text-black" *ngFor="let house of houses">
+        <div class="card text-white" *ngFor="let house of houses">
           <div class="card-header d-flex justify-content-between align-items-center" id="headingProfile2">
             <h2 class="mb-0" *ngIf="houses">
-              {{ house.name }}
+              {{ house.name }} Informations
             </h2>
             <button class="btn btn-link" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseProfile' + house.id" aria-expanded="true" [attr.aria-controls]="'collapseProfile' + house.id">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
